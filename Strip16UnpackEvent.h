@@ -39,7 +39,7 @@ class Strip16UnpackEvent : public TGo4EventElement {
       Double_t Pos_t[4][16];
       UInt_t Pos_b[4][16];
       Double_t TOF_max[4][16];
-   //   UInt_t l_T[0][4][16];
+      //UInt_t l_T[0][4][16];
       Double_t        fTrace[3096];
       UInt_t Macropulse;
       UInt_t TOF;

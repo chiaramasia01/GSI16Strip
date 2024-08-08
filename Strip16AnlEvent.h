@@ -28,23 +28,23 @@ class Strip16AnlEvent : public TGo4EventElement
 
     
       Double_t fE_kev;        // low energy 
-   //   Long64_t fTime;  //analog time
+      // Long64_t fTime;  //analog time
       Double_t fTAC; //TAC
      
-      Double_t    fIDY;
+      Double_t fIDY;
       Int_t    fIDX;
       
       Double_t fTimeTrig;
       Double_t fTimeStrip;
       Int_t    fev_num;
-      Int_t fB_pulse;
-      Int_t fTOF_bit; //TOF veto
+      Int_t    fB_pulse;
+      Int_t    fTOF_bit; //TOF veto
 
-       Double_t fTraceTrig[3096];
-       Double_t fSample[3096];
+      Double_t fTraceTrig[3096];
+      Double_t fSample[3096];
       
-      //Int_t fTrig;
-   private:
+      //Int_t    fTrig;
+      private:
       // this object is streamed. Therefore pointers must be excluded!
       // Otherwise these objects are streamed as well
       Strip16AnlProc     * fxStrip16CP;  //! Don't put this to file

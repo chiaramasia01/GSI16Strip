@@ -45,9 +45,9 @@ Strip16CalibParameter::Strip16CalibParameter(const Text_t *name)
 
 // Read alpha energy calibration
 
-  file.open("Calib_Energy.dat");
+  file.open("Calib_Energy_blank.dat");
   if (file.fail()) {
-    cout << "ERROR: Strip16CalibParameter - Could not open file: Calib_Energy.dat ! (params set to 1 and 0)\n"; // if failing to open the files prints out an error message
+    cout << "ERROR: Strip16CalibParameter - Could not open file: Calib_Energy_blank.dat ! (params set to 1 and 0)\n"; // if failing to open the files prints out an error message
     //for (i = 0; i < 4; i++) {
 	for (j = 0; j < 16; j++) // for loop among the number of strips
 	 {
@@ -57,21 +57,21 @@ Strip16CalibParameter::Strip16CalibParameter(const Text_t *name)
 	}
   }
   else {
-    cout << "Strip16CalibParameter - reading alpha calibration from: Calib_Energy.dat\n";
+    cout << "Strip16CalibParameter - reading alpha calibration from: Calib_Energy_blank.dat\n";
     //for (i = 0; i < 4; i++) {
 	for (j = 0; j < 16; j++)
 	 {
 	   file >> A[1][j] >> B[1][j];
-	   if (file.fail()) cout << "ERROR reading Calib_Energy.dat\n";
+	   if (file.fail()) cout << "ERROR reading Calib_Energy_blank.dat\n";
 	 }}
  // }
   file.close();
 
 // Read position calibration (same structure as the previous section)
   
-   file.open("Calib_position.dat");
+   file.open("Calib_position_blank.dat");
   if (file.fail()) {
-    cout << "ERROR: Strip16CalibParameter - Could not open file: Calib_position.dat ! (params set to 1 and 0)\n";
+    cout << "ERROR: Strip16CalibParameter - Could not open file: Calib_position_blank.dat ! (params set to 1 and 0)\n";
     for (j = 0; j < 16; j++) {
       postA[1][j] = 0.;
       postB[1][j] = 1.;
@@ -79,10 +79,10 @@ Strip16CalibParameter::Strip16CalibParameter(const Text_t *name)
     }
   }
   else {
-    cout << "Strip16CalibParameter - reading Post calibration from: Calib_position.dat\n";
+    cout << "Strip16CalibParameter - reading Post calibration from: Calib_position_blank.dat\n";
     for (j = 0; j < 16; j++) {
       file >> postA[1][j] >> postB[1][j] >> postC[1][j];
-      if (file.fail()) cout << "ERROR reading Calib_position.dat\n";
+      if (file.fail()) cout << "ERROR reading Calib_position_blank.dat\n";
     }
   }
   file.close();

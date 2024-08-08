@@ -35,6 +35,8 @@ public:
 	Strip16AnlProc() ;
 	Strip16AnlProc(Text_t * name);
 	void     Strip16EventAnalysis(Strip16AnlEvent* target);
+    void     writeCSV(TH1D* hist, const char* filename); 
+    void     saveCSV(TH1D* hist,int i, int j) ;
 	void     MapHardware();
 	virtual ~Strip16AnlProc() ;
 	Bool_t   BitTest(const Int_t &tested, Int_t position);
@@ -56,7 +58,7 @@ public:
 
 	//1D histos (calibrated)
 
-	TH1D *h_stripcalib[4][16];
+        TH1D *h_stripcalib[4][16];
         TH1D *h_stripantiveto[4][16];
         TH1D *h_stripveto[4][16];
         TH1D *h_strippulse[4][16];
@@ -97,20 +99,20 @@ public:
             
 //============= output events =================
 
-      Bool_t newsetup; //check this out
+       Bool_t newsetup; //check this out
 
        Float_t stripsum[4][16];
        Float_t Pos_t[4][16];
        Double_t Time[4][16];
        Double_t sample_time;
        Double_t    l_t_trig;
-//       Float_t Posb[4][16];
+//     Float_t Posb[4][16];
        Double_t TOF_max;
        UInt_t macropulse;
        UInt_t tof;
        Double_t IDY;
        UInt_t IDX;
-      //Float_t l_T[0][4][16];
+     //Float_t l_T[0][4][16];
 
 ClassDef(Strip16AnlProc,1)
 };

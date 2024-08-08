@@ -35,86 +35,22 @@
 #include "TDataMember.h"
 
 // Header files passed as explicit arguments
-#include "./Strip16UnpackProc.h"
 #include "./Strip16HardwareParameter.h"
-#include "./Strip16UnpackFact.h"
-#include "./Strip16AnlEvent.h"
-#include "./Strip16AnlProc.h"
 #include "./Strip16AnlFact.h"
+#include "./Strip16AnlEvent.h"
+#include "./Strip16UnpackFact.h"
+#include "./Strip16Globals.h"
 #include "./Strip16UnpackParam.h"
 #include "./Strip16UnpackEvent.h"
+#include "./Strip16UnpackProc.h"
 #include "./Strip16Analysis.h"
 #include "./Strip16CalibParameter.h"
-#include "./Strip16Globals.h"
+#include "./Strip16AnlProc.h"
 
 // Header files passed via #pragma extra_include
 
 // The generated code does not explicitly qualify STL entities
 namespace std {} using namespace std;
-
-namespace ROOT {
-   static void *new_Strip16UnpackEvent(void *p = 0);
-   static void *newArray_Strip16UnpackEvent(Long_t size, void *p);
-   static void delete_Strip16UnpackEvent(void *p);
-   static void deleteArray_Strip16UnpackEvent(void *p);
-   static void destruct_Strip16UnpackEvent(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::Strip16UnpackEvent*)
-   {
-      ::Strip16UnpackEvent *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::Strip16UnpackEvent >(0);
-      static ::ROOT::TGenericClassInfo 
-         instance("Strip16UnpackEvent", ::Strip16UnpackEvent::Class_Version(), "Strip16UnpackEvent.h", 28,
-                  typeid(::Strip16UnpackEvent), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &::Strip16UnpackEvent::Dictionary, isa_proxy, 4,
-                  sizeof(::Strip16UnpackEvent) );
-      instance.SetNew(&new_Strip16UnpackEvent);
-      instance.SetNewArray(&newArray_Strip16UnpackEvent);
-      instance.SetDelete(&delete_Strip16UnpackEvent);
-      instance.SetDeleteArray(&deleteArray_Strip16UnpackEvent);
-      instance.SetDestructor(&destruct_Strip16UnpackEvent);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::Strip16UnpackEvent*)
-   {
-      return GenerateInitInstanceLocal((::Strip16UnpackEvent*)0);
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
-} // end of namespace ROOT
-
-namespace ROOT {
-   static void *new_Strip16UnpackProc(void *p = 0);
-   static void *newArray_Strip16UnpackProc(Long_t size, void *p);
-   static void delete_Strip16UnpackProc(void *p);
-   static void deleteArray_Strip16UnpackProc(void *p);
-   static void destruct_Strip16UnpackProc(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::Strip16UnpackProc*)
-   {
-      ::Strip16UnpackProc *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::Strip16UnpackProc >(0);
-      static ::ROOT::TGenericClassInfo 
-         instance("Strip16UnpackProc", ::Strip16UnpackProc::Class_Version(), "Strip16UnpackProc.h", 79,
-                  typeid(::Strip16UnpackProc), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &::Strip16UnpackProc::Dictionary, isa_proxy, 4,
-                  sizeof(::Strip16UnpackProc) );
-      instance.SetNew(&new_Strip16UnpackProc);
-      instance.SetNewArray(&newArray_Strip16UnpackProc);
-      instance.SetDelete(&delete_Strip16UnpackProc);
-      instance.SetDeleteArray(&deleteArray_Strip16UnpackProc);
-      instance.SetDestructor(&destruct_Strip16UnpackProc);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::Strip16UnpackProc*)
-   {
-      return GenerateInitInstanceLocal((::Strip16UnpackProc*)0);
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
-} // end of namespace ROOT
 
 namespace ROOT {
    static void *new_Strip16HardwareParameter(void *p = 0);
@@ -149,35 +85,35 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
-   static void *new_Strip16UnpackFact(void *p = 0);
-   static void *newArray_Strip16UnpackFact(Long_t size, void *p);
-   static void delete_Strip16UnpackFact(void *p);
-   static void deleteArray_Strip16UnpackFact(void *p);
-   static void destruct_Strip16UnpackFact(void *p);
+   static void *new_Strip16UnpackEvent(void *p = 0);
+   static void *newArray_Strip16UnpackEvent(Long_t size, void *p);
+   static void delete_Strip16UnpackEvent(void *p);
+   static void deleteArray_Strip16UnpackEvent(void *p);
+   static void destruct_Strip16UnpackEvent(void *p);
 
    // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::Strip16UnpackFact*)
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::Strip16UnpackEvent*)
    {
-      ::Strip16UnpackFact *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::Strip16UnpackFact >(0);
+      ::Strip16UnpackEvent *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::Strip16UnpackEvent >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("Strip16UnpackFact", ::Strip16UnpackFact::Class_Version(), "Strip16UnpackFact.h", 15,
-                  typeid(::Strip16UnpackFact), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &::Strip16UnpackFact::Dictionary, isa_proxy, 4,
-                  sizeof(::Strip16UnpackFact) );
-      instance.SetNew(&new_Strip16UnpackFact);
-      instance.SetNewArray(&newArray_Strip16UnpackFact);
-      instance.SetDelete(&delete_Strip16UnpackFact);
-      instance.SetDeleteArray(&deleteArray_Strip16UnpackFact);
-      instance.SetDestructor(&destruct_Strip16UnpackFact);
+         instance("Strip16UnpackEvent", ::Strip16UnpackEvent::Class_Version(), "Strip16UnpackEvent.h", 28,
+                  typeid(::Strip16UnpackEvent), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::Strip16UnpackEvent::Dictionary, isa_proxy, 4,
+                  sizeof(::Strip16UnpackEvent) );
+      instance.SetNew(&new_Strip16UnpackEvent);
+      instance.SetNewArray(&newArray_Strip16UnpackEvent);
+      instance.SetDelete(&delete_Strip16UnpackEvent);
+      instance.SetDeleteArray(&deleteArray_Strip16UnpackEvent);
+      instance.SetDestructor(&destruct_Strip16UnpackEvent);
       return &instance;
    }
-   TGenericClassInfo *GenerateInitInstance(const ::Strip16UnpackFact*)
+   TGenericClassInfo *GenerateInitInstance(const ::Strip16UnpackEvent*)
    {
-      return GenerateInitInstanceLocal((::Strip16UnpackFact*)0);
+      return GenerateInitInstanceLocal((::Strip16UnpackEvent*)0);
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
@@ -193,7 +129,7 @@ namespace ROOT {
       ::Strip16CalibParameter *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::Strip16CalibParameter >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("Strip16CalibParameter", ::Strip16CalibParameter::Class_Version(), "Strip16CalibParameter.h", 7,
+         instance("Strip16CalibParameter", ::Strip16CalibParameter::Class_Version(), "Strip16CalibParameter.h", 14,
                   typeid(::Strip16CalibParameter), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::Strip16CalibParameter::Dictionary, isa_proxy, 4,
                   sizeof(::Strip16CalibParameter) );
@@ -210,6 +146,38 @@ namespace ROOT {
    }
    // Static variable to force the class initialization
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::Strip16CalibParameter*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
+   static void *new_Strip16UnpackProc(void *p = 0);
+   static void *newArray_Strip16UnpackProc(Long_t size, void *p);
+   static void delete_Strip16UnpackProc(void *p);
+   static void deleteArray_Strip16UnpackProc(void *p);
+   static void destruct_Strip16UnpackProc(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::Strip16UnpackProc*)
+   {
+      ::Strip16UnpackProc *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::Strip16UnpackProc >(0);
+      static ::ROOT::TGenericClassInfo 
+         instance("Strip16UnpackProc", ::Strip16UnpackProc::Class_Version(), "Strip16UnpackProc.h", 79,
+                  typeid(::Strip16UnpackProc), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::Strip16UnpackProc::Dictionary, isa_proxy, 4,
+                  sizeof(::Strip16UnpackProc) );
+      instance.SetNew(&new_Strip16UnpackProc);
+      instance.SetNewArray(&newArray_Strip16UnpackProc);
+      instance.SetDelete(&delete_Strip16UnpackProc);
+      instance.SetDeleteArray(&deleteArray_Strip16UnpackProc);
+      instance.SetDestructor(&destruct_Strip16UnpackProc);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::Strip16UnpackProc*)
+   {
+      return GenerateInitInstanceLocal((::Strip16UnpackProc*)0);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
@@ -309,6 +277,38 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static void *new_Strip16UnpackFact(void *p = 0);
+   static void *newArray_Strip16UnpackFact(Long_t size, void *p);
+   static void delete_Strip16UnpackFact(void *p);
+   static void deleteArray_Strip16UnpackFact(void *p);
+   static void destruct_Strip16UnpackFact(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::Strip16UnpackFact*)
+   {
+      ::Strip16UnpackFact *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::Strip16UnpackFact >(0);
+      static ::ROOT::TGenericClassInfo 
+         instance("Strip16UnpackFact", ::Strip16UnpackFact::Class_Version(), "Strip16UnpackFact.h", 15,
+                  typeid(::Strip16UnpackFact), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::Strip16UnpackFact::Dictionary, isa_proxy, 4,
+                  sizeof(::Strip16UnpackFact) );
+      instance.SetNew(&new_Strip16UnpackFact);
+      instance.SetNewArray(&newArray_Strip16UnpackFact);
+      instance.SetDelete(&delete_Strip16UnpackFact);
+      instance.SetDeleteArray(&deleteArray_Strip16UnpackFact);
+      instance.SetDestructor(&destruct_Strip16UnpackFact);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::Strip16UnpackFact*)
+   {
+      return GenerateInitInstanceLocal((::Strip16UnpackFact*)0);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
    static void *new_Strip16UnpackParam(void *p = 0);
    static void *newArray_Strip16UnpackParam(Long_t size, void *p);
    static void delete_Strip16UnpackParam(void *p);
@@ -373,76 +373,6 @@ namespace ROOT {
 } // end of namespace ROOT
 
 //______________________________________________________________________________
-atomic_TClass_ptr Strip16UnpackEvent::fgIsA(0);  // static to hold class pointer
-
-//______________________________________________________________________________
-const char *Strip16UnpackEvent::Class_Name()
-{
-   return "Strip16UnpackEvent";
-}
-
-//______________________________________________________________________________
-const char *Strip16UnpackEvent::ImplFileName()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetImplFileName();
-}
-
-//______________________________________________________________________________
-int Strip16UnpackEvent::ImplFileLine()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetImplFileLine();
-}
-
-//______________________________________________________________________________
-TClass *Strip16UnpackEvent::Dictionary()
-{
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetClass();
-   return fgIsA;
-}
-
-//______________________________________________________________________________
-TClass *Strip16UnpackEvent::Class()
-{
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetClass(); }
-   return fgIsA;
-}
-
-//______________________________________________________________________________
-atomic_TClass_ptr Strip16UnpackProc::fgIsA(0);  // static to hold class pointer
-
-//______________________________________________________________________________
-const char *Strip16UnpackProc::Class_Name()
-{
-   return "Strip16UnpackProc";
-}
-
-//______________________________________________________________________________
-const char *Strip16UnpackProc::ImplFileName()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetImplFileName();
-}
-
-//______________________________________________________________________________
-int Strip16UnpackProc::ImplFileLine()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetImplFileLine();
-}
-
-//______________________________________________________________________________
-TClass *Strip16UnpackProc::Dictionary()
-{
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetClass();
-   return fgIsA;
-}
-
-//______________________________________________________________________________
-TClass *Strip16UnpackProc::Class()
-{
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetClass(); }
-   return fgIsA;
-}
-
-//______________________________________________________________________________
 atomic_TClass_ptr Strip16HardwareParameter::fgIsA(0);  // static to hold class pointer
 
 //______________________________________________________________________________
@@ -478,37 +408,37 @@ TClass *Strip16HardwareParameter::Class()
 }
 
 //______________________________________________________________________________
-atomic_TClass_ptr Strip16UnpackFact::fgIsA(0);  // static to hold class pointer
+atomic_TClass_ptr Strip16UnpackEvent::fgIsA(0);  // static to hold class pointer
 
 //______________________________________________________________________________
-const char *Strip16UnpackFact::Class_Name()
+const char *Strip16UnpackEvent::Class_Name()
 {
-   return "Strip16UnpackFact";
+   return "Strip16UnpackEvent";
 }
 
 //______________________________________________________________________________
-const char *Strip16UnpackFact::ImplFileName()
+const char *Strip16UnpackEvent::ImplFileName()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetImplFileName();
+   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetImplFileName();
 }
 
 //______________________________________________________________________________
-int Strip16UnpackFact::ImplFileLine()
+int Strip16UnpackEvent::ImplFileLine()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetImplFileLine();
+   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetImplFileLine();
 }
 
 //______________________________________________________________________________
-TClass *Strip16UnpackFact::Dictionary()
+TClass *Strip16UnpackEvent::Dictionary()
 {
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetClass();
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetClass();
    return fgIsA;
 }
 
 //______________________________________________________________________________
-TClass *Strip16UnpackFact::Class()
+TClass *Strip16UnpackEvent::Class()
 {
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackEvent*)0x0)->GetClass(); }
    return fgIsA;
 }
 
@@ -544,6 +474,41 @@ TClass *Strip16CalibParameter::Dictionary()
 TClass *Strip16CalibParameter::Class()
 {
    if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16CalibParameter*)0x0)->GetClass(); }
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+atomic_TClass_ptr Strip16UnpackProc::fgIsA(0);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *Strip16UnpackProc::Class_Name()
+{
+   return "Strip16UnpackProc";
+}
+
+//______________________________________________________________________________
+const char *Strip16UnpackProc::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int Strip16UnpackProc::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *Strip16UnpackProc::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *Strip16UnpackProc::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackProc*)0x0)->GetClass(); }
    return fgIsA;
 }
 
@@ -653,6 +618,41 @@ TClass *Strip16AnlFact::Class()
 }
 
 //______________________________________________________________________________
+atomic_TClass_ptr Strip16UnpackFact::fgIsA(0);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *Strip16UnpackFact::Class_Name()
+{
+   return "Strip16UnpackFact";
+}
+
+//______________________________________________________________________________
+const char *Strip16UnpackFact::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int Strip16UnpackFact::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *Strip16UnpackFact::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *Strip16UnpackFact::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::Strip16UnpackFact*)0x0)->GetClass(); }
+   return fgIsA;
+}
+
+//______________________________________________________________________________
 atomic_TClass_ptr Strip16UnpackParam::fgIsA(0);  // static to hold class pointer
 
 //______________________________________________________________________________
@@ -723,72 +723,6 @@ TClass *Strip16Analysis::Class()
 }
 
 //______________________________________________________________________________
-void Strip16UnpackEvent::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class Strip16UnpackEvent.
-
-   if (R__b.IsReading()) {
-      R__b.ReadClassBuffer(Strip16UnpackEvent::Class(),this);
-   } else {
-      R__b.WriteClassBuffer(Strip16UnpackEvent::Class(),this);
-   }
-}
-
-namespace ROOT {
-   // Wrappers around operator new
-   static void *new_Strip16UnpackEvent(void *p) {
-      return  p ? new(p) ::Strip16UnpackEvent : new ::Strip16UnpackEvent;
-   }
-   static void *newArray_Strip16UnpackEvent(Long_t nElements, void *p) {
-      return p ? new(p) ::Strip16UnpackEvent[nElements] : new ::Strip16UnpackEvent[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_Strip16UnpackEvent(void *p) {
-      delete ((::Strip16UnpackEvent*)p);
-   }
-   static void deleteArray_Strip16UnpackEvent(void *p) {
-      delete [] ((::Strip16UnpackEvent*)p);
-   }
-   static void destruct_Strip16UnpackEvent(void *p) {
-      typedef ::Strip16UnpackEvent current_t;
-      ((current_t*)p)->~current_t();
-   }
-} // end of namespace ROOT for class ::Strip16UnpackEvent
-
-//______________________________________________________________________________
-void Strip16UnpackProc::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class Strip16UnpackProc.
-
-   if (R__b.IsReading()) {
-      R__b.ReadClassBuffer(Strip16UnpackProc::Class(),this);
-   } else {
-      R__b.WriteClassBuffer(Strip16UnpackProc::Class(),this);
-   }
-}
-
-namespace ROOT {
-   // Wrappers around operator new
-   static void *new_Strip16UnpackProc(void *p) {
-      return  p ? new(p) ::Strip16UnpackProc : new ::Strip16UnpackProc;
-   }
-   static void *newArray_Strip16UnpackProc(Long_t nElements, void *p) {
-      return p ? new(p) ::Strip16UnpackProc[nElements] : new ::Strip16UnpackProc[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_Strip16UnpackProc(void *p) {
-      delete ((::Strip16UnpackProc*)p);
-   }
-   static void deleteArray_Strip16UnpackProc(void *p) {
-      delete [] ((::Strip16UnpackProc*)p);
-   }
-   static void destruct_Strip16UnpackProc(void *p) {
-      typedef ::Strip16UnpackProc current_t;
-      ((current_t*)p)->~current_t();
-   }
-} // end of namespace ROOT for class ::Strip16UnpackProc
-
-//______________________________________________________________________________
 void Strip16HardwareParameter::Streamer(TBuffer &R__b)
 {
    // Stream an object of class Strip16HardwareParameter.
@@ -822,37 +756,37 @@ namespace ROOT {
 } // end of namespace ROOT for class ::Strip16HardwareParameter
 
 //______________________________________________________________________________
-void Strip16UnpackFact::Streamer(TBuffer &R__b)
+void Strip16UnpackEvent::Streamer(TBuffer &R__b)
 {
-   // Stream an object of class Strip16UnpackFact.
+   // Stream an object of class Strip16UnpackEvent.
 
    if (R__b.IsReading()) {
-      R__b.ReadClassBuffer(Strip16UnpackFact::Class(),this);
+      R__b.ReadClassBuffer(Strip16UnpackEvent::Class(),this);
    } else {
-      R__b.WriteClassBuffer(Strip16UnpackFact::Class(),this);
+      R__b.WriteClassBuffer(Strip16UnpackEvent::Class(),this);
    }
 }
 
 namespace ROOT {
    // Wrappers around operator new
-   static void *new_Strip16UnpackFact(void *p) {
-      return  p ? new(p) ::Strip16UnpackFact : new ::Strip16UnpackFact;
+   static void *new_Strip16UnpackEvent(void *p) {
+      return  p ? new(p) ::Strip16UnpackEvent : new ::Strip16UnpackEvent;
    }
-   static void *newArray_Strip16UnpackFact(Long_t nElements, void *p) {
-      return p ? new(p) ::Strip16UnpackFact[nElements] : new ::Strip16UnpackFact[nElements];
+   static void *newArray_Strip16UnpackEvent(Long_t nElements, void *p) {
+      return p ? new(p) ::Strip16UnpackEvent[nElements] : new ::Strip16UnpackEvent[nElements];
    }
    // Wrapper around operator delete
-   static void delete_Strip16UnpackFact(void *p) {
-      delete ((::Strip16UnpackFact*)p);
+   static void delete_Strip16UnpackEvent(void *p) {
+      delete ((::Strip16UnpackEvent*)p);
    }
-   static void deleteArray_Strip16UnpackFact(void *p) {
-      delete [] ((::Strip16UnpackFact*)p);
+   static void deleteArray_Strip16UnpackEvent(void *p) {
+      delete [] ((::Strip16UnpackEvent*)p);
    }
-   static void destruct_Strip16UnpackFact(void *p) {
-      typedef ::Strip16UnpackFact current_t;
+   static void destruct_Strip16UnpackEvent(void *p) {
+      typedef ::Strip16UnpackEvent current_t;
       ((current_t*)p)->~current_t();
    }
-} // end of namespace ROOT for class ::Strip16UnpackFact
+} // end of namespace ROOT for class ::Strip16UnpackEvent
 
 //______________________________________________________________________________
 void Strip16CalibParameter::Streamer(TBuffer &R__b)
@@ -886,6 +820,39 @@ namespace ROOT {
       ((current_t*)p)->~current_t();
    }
 } // end of namespace ROOT for class ::Strip16CalibParameter
+
+//______________________________________________________________________________
+void Strip16UnpackProc::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class Strip16UnpackProc.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(Strip16UnpackProc::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(Strip16UnpackProc::Class(),this);
+   }
+}
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_Strip16UnpackProc(void *p) {
+      return  p ? new(p) ::Strip16UnpackProc : new ::Strip16UnpackProc;
+   }
+   static void *newArray_Strip16UnpackProc(Long_t nElements, void *p) {
+      return p ? new(p) ::Strip16UnpackProc[nElements] : new ::Strip16UnpackProc[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_Strip16UnpackProc(void *p) {
+      delete ((::Strip16UnpackProc*)p);
+   }
+   static void deleteArray_Strip16UnpackProc(void *p) {
+      delete [] ((::Strip16UnpackProc*)p);
+   }
+   static void destruct_Strip16UnpackProc(void *p) {
+      typedef ::Strip16UnpackProc current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class ::Strip16UnpackProc
 
 //______________________________________________________________________________
 void Strip16AnlProc::Streamer(TBuffer &R__b)
@@ -987,6 +954,39 @@ namespace ROOT {
 } // end of namespace ROOT for class ::Strip16AnlFact
 
 //______________________________________________________________________________
+void Strip16UnpackFact::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class Strip16UnpackFact.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(Strip16UnpackFact::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(Strip16UnpackFact::Class(),this);
+   }
+}
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_Strip16UnpackFact(void *p) {
+      return  p ? new(p) ::Strip16UnpackFact : new ::Strip16UnpackFact;
+   }
+   static void *newArray_Strip16UnpackFact(Long_t nElements, void *p) {
+      return p ? new(p) ::Strip16UnpackFact[nElements] : new ::Strip16UnpackFact[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_Strip16UnpackFact(void *p) {
+      delete ((::Strip16UnpackFact*)p);
+   }
+   static void deleteArray_Strip16UnpackFact(void *p) {
+      delete [] ((::Strip16UnpackFact*)p);
+   }
+   static void destruct_Strip16UnpackFact(void *p) {
+      typedef ::Strip16UnpackFact current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class ::Strip16UnpackFact
+
+//______________________________________________________________________________
 void Strip16UnpackParam::Streamer(TBuffer &R__b)
 {
    // Stream an object of class Strip16UnpackParam.
@@ -1055,24 +1055,24 @@ namespace ROOT {
 namespace {
   void TriggerDictionaryInitialization_libGo4UserAnalysis_Impl() {
     static const char* headers[] = {
-"./Strip16UnpackProc.h",
 "./Strip16HardwareParameter.h",
-"./Strip16UnpackFact.h",
-"./Strip16AnlEvent.h",
-"./Strip16AnlProc.h",
 "./Strip16AnlFact.h",
+"./Strip16AnlEvent.h",
+"./Strip16UnpackFact.h",
+"./Strip16Globals.h",
 "./Strip16UnpackParam.h",
 "./Strip16UnpackEvent.h",
+"./Strip16UnpackProc.h",
 "./Strip16Analysis.h",
 "./Strip16CalibParameter.h",
-"./Strip16Globals.h",
+"./Strip16AnlProc.h",
 0
     };
     static const char* includePaths[] = {
 "/cvmfs/eel.gsi.de/debian10-x86_64/go4/602-00/include",
 "/cvmfs/eel.gsi.de/debian10-x86_64/go4/602-00",
 "/cvmfs/eel.gsi.de/debian10-x86_64/root/624-04/include/",
-"/u/ship/16_strip_2021/",
+"/u/ship/chiara_2024/16_strip_2021/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -1081,14 +1081,14 @@ namespace {
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
-class __attribute__((annotate("$clingAutoload$Strip16UnpackEvent.h")))  __attribute__((annotate("$clingAutoload$./Strip16UnpackProc.h")))  Strip16UnpackEvent;
-class __attribute__((annotate("$clingAutoload$./Strip16UnpackProc.h")))  Strip16UnpackProc;
 class __attribute__((annotate("$clingAutoload$./Strip16HardwareParameter.h")))  Strip16HardwareParameter;
-class __attribute__((annotate("$clingAutoload$./Strip16UnpackFact.h")))  Strip16UnpackFact;
-class __attribute__((annotate("$clingAutoload$Strip16CalibParameter.h")))  __attribute__((annotate("$clingAutoload$./Strip16AnlEvent.h")))  Strip16CalibParameter;
-class __attribute__((annotate("$clingAutoload$Strip16AnlProc.h")))  __attribute__((annotate("$clingAutoload$./Strip16AnlEvent.h")))  Strip16AnlProc;
-class __attribute__((annotate("$clingAutoload$./Strip16AnlEvent.h")))  Strip16AnlEvent;
+class __attribute__((annotate("$clingAutoload$Strip16UnpackEvent.h")))  __attribute__((annotate("$clingAutoload$./Strip16AnlFact.h")))  Strip16UnpackEvent;
+class __attribute__((annotate("$clingAutoload$Strip16CalibParameter.h")))  __attribute__((annotate("$clingAutoload$./Strip16AnlFact.h")))  Strip16CalibParameter;
+class __attribute__((annotate("$clingAutoload$Strip16UnpackProc.h")))  __attribute__((annotate("$clingAutoload$./Strip16AnlFact.h")))  Strip16UnpackProc;
+class __attribute__((annotate("$clingAutoload$Strip16AnlProc.h")))  __attribute__((annotate("$clingAutoload$./Strip16AnlFact.h")))  Strip16AnlProc;
+class __attribute__((annotate("$clingAutoload$Strip16AnlEvent.h")))  __attribute__((annotate("$clingAutoload$./Strip16AnlFact.h")))  Strip16AnlEvent;
 class __attribute__((annotate("$clingAutoload$./Strip16AnlFact.h")))  Strip16AnlFact;
+class __attribute__((annotate("$clingAutoload$./Strip16UnpackFact.h")))  Strip16UnpackFact;
 class __attribute__((annotate("$clingAutoload$./Strip16UnpackParam.h")))  Strip16UnpackParam;
 class __attribute__((annotate("$clingAutoload$./Strip16Analysis.h")))  Strip16Analysis;
 )DICTFWDDCLS";
@@ -1101,17 +1101,17 @@ class __attribute__((annotate("$clingAutoload$./Strip16Analysis.h")))  Strip16An
 
 #define _BACKWARD_BACKWARD_WARNING_H
 // Inline headers
-#include "./Strip16UnpackProc.h"
 #include "./Strip16HardwareParameter.h"
-#include "./Strip16UnpackFact.h"
-#include "./Strip16AnlEvent.h"
-#include "./Strip16AnlProc.h"
 #include "./Strip16AnlFact.h"
+#include "./Strip16AnlEvent.h"
+#include "./Strip16UnpackFact.h"
+#include "./Strip16Globals.h"
 #include "./Strip16UnpackParam.h"
 #include "./Strip16UnpackEvent.h"
+#include "./Strip16UnpackProc.h"
 #include "./Strip16Analysis.h"
 #include "./Strip16CalibParameter.h"
-#include "./Strip16Globals.h"
+#include "./Strip16AnlProc.h"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";

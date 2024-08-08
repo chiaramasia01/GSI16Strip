@@ -53,14 +53,15 @@ void  Strip16UnpackEvent::Clear(Option_t *t)
                     }
                 }
 
-                  for (int i=0; i<3096; i++){
-                    fTrace[i]=0;
+  for (int i=0; i<3096; i++){
+        fTrace[i]=0;
                     }
-                trg_time=0;
-                TOF=0;
-                l_t_trig = -1;
-                pileup=0;
-                //event_number=0;
+                    
+    trg_time=0;
+    TOF=0;
+    l_t_trig = -1;
+    pileup=0;
+    //event_number=0;
 
  // for(int i=0; i<5; i++){for(int j=0;j<16;j++){l_T[0][i][j]=0;}}
 

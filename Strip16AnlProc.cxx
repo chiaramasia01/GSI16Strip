@@ -2,12 +2,21 @@
 //25.06.15.
 //16 Strip SHIP detector online sort code
 
+
+//C.Masia
+//06.08.24
+//Added lines that should produce a CSV file to be analysed in python
+
+
+/* This codes creates and fill the histograms visible in go4 */
+
 #include <iomanip>
 #include "Strip16AnlProc.h"
 #include "Strip16AnlEvent.h"
 #include "Strip16CalibParameter.h"
 #include "TFile.h"
 #include "TTree.h"
+#include <sstream>
 
 ofstream   gOutputFile;
 
@@ -23,6 +32,12 @@ float num_bin_cal = 1000;
 float max_tof = 60000;  // time of flight data
 float min_tof = 0;
 float num_bin_tof = 2000;
+
+float min_uncal_en = 3000; // histogram energy range for uncalibrated data
+float max_uncal_en = 5000;
+
+
+ofstream   outfile;
 
 
 //Long64_t  DTime = 0;
@@ -80,16 +95,20 @@ TGo4EventProcessor(cname)
   if (fCal) fCal->PrintParameter(0,0);
   else cout << "**** ERRR - CalibPar doesn't exist - program will crash.\n";
   
+  ///Open file to write to 
+  outfile.open("20240808_test001_0001_uncal.txt", ios::out);
+  
 
 //====================== Creating histograms =========================
 
 
 
-   for (int i=1;i<2;i++)     // executes once
-     {for (int j=0;j<16;j++) // executes for each strip
- 	{
+   for (int i=1;i<2;i++){     // executes once. NOTE Why do we loop on i? AKM 080824
+     
+         for (int j=0;j<16;j++){ // executes for each strip
+            
         //Position
-                int k=0;
+                int k=0; ///NOTE do we need to define k here? Or even at all?
 //                 if(i==1){k=j;sprintf(name,"E vs Postion %02d", k);
 //                 sprintf(descr, "E vs Postion top %02d", k);}
 //                 RemoveHistogram(name);
@@ -99,11 +118,15 @@ TGo4EventProcessor(cname)
                 
                 /* Creates the histogram of energy vs calibration position*/
                 
+                /// NOTE adjust histogram parameters for uncalibrated data 
+                
                 if(i==1){k=j;sprintf(name2,"E vs Calib Postion top %02d", k);             // i is only 1 so the condition is always true
                 sprintf(name2,"E vs Calib Postion top %02d", k);}                       // sprintf used to create hist name and description, name is used to refer to the histogram
                 sprintf(descr2, "E vs Calib Postion top %02d", k);                      // displayed in the plot title
                 RemoveHistogram(name2);                                                  // removes any existing histogram with the same name
-                h_E_poscalib[i][j]=new TH2D(name2,descr2, 42, 0, 42, 500, 5000, 6000);  // creates 2D histogram, the six numbers are: nbins-x, min-x, max-x, nbins-y, min-y, max-y
+                h_E_poscalib[i][j]=new TH2D(name2,descr2, 42, 0, 42, 500, min_uncal_en, max_uncal_en);  // creates 2D histogram, the six numbers are: nbins-x, min-x, max-x, nbins-y, min-y, max-y
+                h_E_poscalib[i][j]->SetXTitle("Calibration Position");
+                h_E_poscalib[i][j]->SetYTitle("Energy ");
                 AddHistogram(h_E_poscalib[i][j],"Calibrations/Positions/");             // The histogram is added to the framework under the path "Calibrations/Positions/"
 
                 //Strip Energies
@@ -112,6 +135,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr2, "E_keV, strip %02d", k);}
                 RemoveHistogram(name2);
                 h_corr_E[i][j] = new TH1D (name2, descr2, num_bin_cal, min_calib, max_calib);  // 1D histogram
+                h_corr_E[i][j]->SetXTitle("Channel");
+                h_corr_E[i][j]->SetYTitle("Counts");
                 AddHistogram(h_corr_E[i][j], "Calibrations/16_Strip_Position_Corrected");
                 
                 // Creates histogram of calibrated energies
@@ -120,14 +145,18 @@ TGo4EventProcessor(cname)
                 sprintf(descr3, "E_keV, strip %02d", k);}
                 RemoveHistogram(name3);
                 h_stripcalib[i][j] = new TH1D (name3, descr3, num_bin_cal, min_calib, max_calib);  // calibrated strips
+                h_stripcalib[i][j]->SetXTitle("Channel");
+                h_stripcalib[i][j]->SetYTitle("Counts");
                 AddHistogram(h_stripcalib[i][j], "16_Strip_Main/Pulse+Pause/16_strip_Pulse+Pause");
                 
-                // Creates the veto histogram
+                // Creates the veto histogram (uses TOF)
 
                 if(i==1){k=j; sprintf(name3, "16 Strip veto %02d", k);  
                 sprintf(descr3, "E_keV, strip %02d", k);}
                 RemoveHistogram(name3);
                 h_stripveto[i][j] = new TH1D (name3, descr3, num_bin_cal, min_calib, max_calib);  // calibrated strips
+                h_stripveto[i][j]->SetXTitle("Channel");
+                h_stripveto[i][j]->SetYTitle("Counts");
                 AddHistogram(h_stripveto[i][j], "Veto/16_Strip_Veto");
                 
                 // Creates the antiveto histogram 
@@ -136,6 +165,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr3, "E_keV, strip %02d", k);}
                 RemoveHistogram(name3);
                 h_stripantiveto[i][j] = new TH1D (name3, descr3, num_bin_cal, min_calib, max_calib);  // calibrated strips
+                h_stripantiveto[i][j]->SetXTitle("Channel ");
+                h_stripantiveto[i][j]->SetYTitle("Counts");
                 AddHistogram(h_stripantiveto[i][j], "AntiVeto/16_Strip_AntiVeto");
                 
                 // Creates pulse histogram
@@ -144,6 +175,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr3, "E_keV, strip %02d", k);}
                 RemoveHistogram(name3);
                 h_strippulse[i][j] = new TH1D (name3, descr3, num_bin_cal, min_calib, max_calib);  // calibrated strips
+                h_strippulse[i][j]->SetXTitle("Channel ");
+                h_strippulse[i][j]->SetYTitle("Counts");
                 AddHistogram(h_strippulse[i][j], "16_Strip_Main/Pulse/16_Strip_Pulse");
                 
                 // Creates pause histogram
@@ -152,6 +185,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr3, "E_keV, strip %02d", k);}
                 RemoveHistogram(name3);
                 h_strippause[i][j] = new TH1D (name3, descr3, num_bin_cal, min_calib, max_calib);  // calibrated strips
+                h_strippause[i][j]->SetXTitle("Channel ");
+                h_strippause[i][j]->SetYTitle("Counts");
                 AddHistogram(h_strippause[i][j], "16_Strip_Main/Pause/16_Strip_Pause");
 
            }
@@ -163,6 +198,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip Pulse+Pause Sum");
                 RemoveHistogram(name4);
                 h_strip_sum=new TH1D(name4,descr4,num_bin_cal, min_calib, max_calib);
+                h_strip_sum->SetXTitle("Channel ");
+                h_strip_sum->SetYTitle("Counts");
                 AddHistogram(h_strip_sum,"16_Strip_Main/Pulse+Pause");
                 
                 // Creates time histogram for time
@@ -171,6 +208,7 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "Time");
                 RemoveHistogram(name4);
                 hTime=new TH1D(name4,descr4,360000, 0, 360000);
+                hTime->SetXTitle("Time [s]");
                 AddHistogram(hTime);
 
 //                  sprintf(name4,"hits_test");
@@ -185,6 +223,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip Veto");
                 RemoveHistogram(name4);
                 h_strip_veto_sum=new TH1D(name4,descr4,num_bin_cal, min_calib, max_calib);
+                h_strip_veto_sum->SetXTitle("Channel ");
+                h_strip_veto_sum->SetYTitle("Counts");
                 AddHistogram(h_strip_veto_sum,"Veto/Sum_spectra");
                 
                 // Creates histogram for antiveto sum
@@ -193,6 +233,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip AntiVeto");
                 RemoveHistogram(name4);
                 h_strip_antiveto_sum=new TH1D(name4,descr4,num_bin_cal, min_calib, max_calib);
+                h_strip_antiveto_sum->SetXTitle("Channel ");
+                h_strip_antiveto_sum->SetYTitle("Counts [keV]");
                 AddHistogram(h_strip_antiveto_sum,"Veto/Sum_spectra");
                 
                 // Creates histogram for pulse sum
@@ -201,6 +243,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip Pulse");
                 RemoveHistogram(name4);
                 h_strip_pulse_sum=new TH1D(name4,descr4,1000, 0, 10000);
+                h_strip_pulse_sum->SetXTitle("Channel ");
+                h_strip_pulse_sum->SetYTitle("Counts");
                 AddHistogram(h_strip_pulse_sum,"16_Strip_Main/Pulse");
                 
                 // Creates histogram for pause sum
@@ -209,6 +253,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip Pause");
                 RemoveHistogram(name4);
                 h_strip_pause_sum=new TH1D(name4,descr4,1000, 0, 10000);
+                h_strip_pause_sum->SetXTitle("Channel ");
+                h_strip_pause_sum->SetYTitle("Counts");
                 AddHistogram(h_strip_pause_sum,"16_Strip_Main/Pause");
                 
                 // Creates histogram for pause sum for strip number < 11
@@ -217,6 +263,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip Pause < strip 11");
                 RemoveHistogram(name4);
                 h_strip_pause_sum_llelf=new TH1D(name4,descr4,num_bin_cal, min_calib, max_calib);
+                h_strip_pause_sum_llelf->SetXTitle("Channel ");
+                h_strip_pause_sum_llelf->SetYTitle("Counts");
                 AddHistogram(h_strip_pause_sum_llelf,"16_Strip_Main/Pause");
                 
                 // Creates histogram for sum, Nobilium gate
@@ -225,6 +273,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip No gate Sum");
                 RemoveHistogram(name4);
                 h_strip_Nogated_sum=new TH1D(name4,descr4,num_bin_cal, min_calib, max_calib);
+                h_strip_Nogated_sum->SetXTitle("Channel ");
+                h_strip_Nogated_sum->SetYTitle("Counts");
                 AddHistogram(h_strip_Nogated_sum,"16_Strip_Main/Alpha_gate_No");
                 
                 // Lawrencium gate
@@ -233,6 +283,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip Lr gate Sum");
                 RemoveHistogram(name4);
                 h_strip_Lrgated_sum=new TH1D(name4,descr4,num_bin_cal, min_calib, max_calib);
+                h_strip_Lrgated_sum->SetXTitle("Channel ");
+                h_strip_Lrgated_sum->SetYTitle("Counts");
                 AddHistogram(h_strip_Lrgated_sum,"16_Strip_Main/Alpha_gate_Lr");
                 
                 // Rutherfordium gate
@@ -241,6 +293,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr4, "16 Strip Rf gate Sum");
                 RemoveHistogram(name4);
                 h_strip_Rfgated_sum=new TH1D(name4,descr4,num_bin_cal, min_calib, max_calib);
+                h_strip_Rfgated_sum->SetXTitle("Channel ");
+                h_strip_Rfgated_sum->SetYTitle("Counts");
                 AddHistogram(h_strip_Rfgated_sum,"16_Strip_Main/Alpha_gate_Rf");
                 
                 // Creates 2D histogram of energy-number of strip
@@ -249,6 +303,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr5, "E_vs_Id");
                 RemoveHistogram(name5);
                 h_EId=new TH2D(name5,descr5,bin_strip, min_strip,max_strip,1000,0,10000 );
+                h_EId->SetXTitle("Strip Number");
+                h_EId->SetYTitle("Energy [keV]");
                 AddHistogram(h_EId,"16_Strip_Main/Pulse+Pause");
                 
                 // Creates 2D histogram of X-Y position pulse+pause
@@ -257,6 +313,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr8, "XvsY");
                 RemoveHistogram(name8);
                 h_posvsstrip=new TH2D(name8,descr8,bin_strip, min_strip,max_strip,100,0,36 );
+                h_posvsstrip->SetXTitle("Strip Number");
+                h_posvsstrip->SetYTitle("Position [mm]");
                 AddHistogram(h_posvsstrip,"16_Strip_Main/Pulse+Pause");
                 
                 // Creates 2D histogram of X-Y position for pulse
@@ -265,6 +323,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr1, "XvsY_Pulse");
                 RemoveHistogram(name1);
                 h_posvsstrip_pulse=new TH2D(name1,descr1,bin_strip, min_strip,max_strip,100,0,36);
+                h_posvsstrip_pulse->SetXTitle("Strip Number");
+                h_posvsstrip_pulse->SetYTitle("Position [mm]");
                 AddHistogram(h_posvsstrip_pulse,"16_Strip_Main/Pulse");
                 
                 // Creates 2D histogram of X-Y position for pause
@@ -273,6 +333,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr1, "XvsY_Pause");
                 RemoveHistogram(name1);
                 h_posvsstrip_pause=new TH2D(name1,descr1,bin_strip, min_strip,max_strip,100,0,36);
+                h_posvsstrip_pause->SetXTitle("Strip Number");
+                h_posvsstrip_pause->SetYTitle("Position [mm]");
                 AddHistogram(h_posvsstrip_pause,"16_Strip_Main/Pause");
                 
                 // Creates 2D histogram of X-Y position 
@@ -281,6 +343,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr1, "XvsY_NoGated");
                 RemoveHistogram(name1);
                 h_posvsstrip_Nogated=new TH2D(name1,descr1,bin_strip, min_strip,max_strip,100,0,36);
+                h_posvsstrip_Nogated->SetXTitle("Strip Number");
+                h_posvsstrip_Nogated->SetYTitle("Position [mm]");
                 AddHistogram(h_posvsstrip_Nogated,"16_Strip_Main/Alpha_gate_No");
                 
                 // Creates 2D histogram of X-Y position, Lawrencium gate
@@ -289,6 +353,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr1, "XvsY_LrGated");
                 RemoveHistogram(name1);
                 h_posvsstrip_Lrgated=new TH2D(name1,descr1,bin_strip, min_strip,max_strip,100,0,36);
+                h_posvsstrip_Lrgated->SetXTitle("Strip Number");
+                h_posvsstrip_Lrgated->SetYTitle("Position [mm]");
                 AddHistogram(h_posvsstrip_Lrgated,"16_Strip_Main/Alpha_gate_Lr");
                 
                 // Creates 2D histogram of X-Y position, Rutherfordium gate
@@ -297,6 +363,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr1, "XvsY_RfGated");
                 RemoveHistogram(name1);
                 h_posvsstrip_Rfgated=new TH2D(name1,descr1,bin_strip, min_strip,max_strip,100,0,36);
+                h_posvsstrip_Rfgated->SetXTitle("Strip Number");
+                h_posvsstrip_Rfgated->SetYTitle("Position [mm]");
                 AddHistogram(h_posvsstrip_Rfgated,"16_Strip_Main/Alpha_gate_Rf");
                 
                 // Creates histogram of number of counts per strip
@@ -305,6 +373,8 @@ TGo4EventProcessor(cname)
                 sprintf(descr6, "ProfileX");
                 RemoveHistogram(name6);
                 hProfileX = new TH1D("ProfileX", "Counts vs strip number", bin_strip, min_strip,max_strip);
+                hProfileX->SetXTitle("Strip Number");
+                hProfileX->SetYTitle("Counts");
                 AddHistogram(hProfileX, "16_Strip_Main");
                 
                 // Creates histogram of number of counts per Y position
@@ -314,42 +384,55 @@ TGo4EventProcessor(cname)
                 RemoveHistogram(name7);
                 RemoveHistogram("ProfileY");
                 hProfileY = new TH1D("ProfileY", "Counts vs Y position", 36,0,36);
+                hProfileY->SetXTitle("Position [mm]");
+                hProfileY->SetYTitle("Counts");
                 AddHistogram(hProfileY, "16_Strip_Main");
                 
                 // Creates histogram of counts per strip, Nobelium gate
 
                 RemoveHistogram("ProfileX_NoGated");
                 hProfileX_NoGated = new TH1D("ProfileX_NoGated", "Counts vs strip number,nobelium gated", bin_strip, min_strip,max_strip);
+                hProfileX_NoGated->SetXTitle("Strip Number");
+                hProfileX_NoGated->SetYTitle("Counts");
                 AddHistogram(hProfileX_NoGated, "16_Strip_Main/Alpha_gate_No");
                 
                 // Creates histogram of number of counts per Y position, Nobelium gate
 
                 RemoveHistogram("ProfileY_NoGated");
                 hProfileY_NoGated = new TH1D("ProfileY_NoGated", "Counts vs Y position,nobelium Gated", 36,0,36);
+                hProfileY_NoGated->SetXTitle("Position [mm]");
+                hProfileY_NoGated->SetYTitle("Counts");
                 AddHistogram(hProfileY_NoGated, "16_Strip_Main/Alpha_gate_No");
                 
                 // creates histogram of counts per strip, Lawrencium gate
 
                 RemoveHistogram("ProfileX_LrGated");
                 hProfileX_LrGated = new TH1D("ProfileX_LrGated", "Counts vs strip number, lawrencium gated", bin_strip, min_strip,max_strip);
+                hProfileX_LrGated->SetXTitle("Strip Number");
+                hProfileX_LrGated->SetYTitle("Counts");
                 AddHistogram(hProfileX_LrGated, "16_Strip_Main/Alpha_gate_Lr");
                 
                 // Creates histogram of number of counts per Y position, Lawrencium gate
 
                 RemoveHistogram("ProfileY_LrGated");
                 hProfileY_LrGated = new TH1D("ProfileY_LrGated", "Counts vs Y position, lawrencium Gated", 36,0,36);
+                hProfileY_LrGated->SetXTitle("Position [mm]");
+                hProfileY_LrGated->SetYTitle("Counts");
                 AddHistogram(hProfileY_LrGated, "16_Strip_Main/Alpha_gate_Lr");
                 
                 // Creates histogram of counts per strip, Rutherfordium gate
 
                  RemoveHistogram("ProfileX_RfGated");
                 hProfileX_RfGated = new TH1D("ProfileX_RfGated", "Counts vs strip number, rutherfordium gated", bin_strip, min_strip,max_strip);
+                hProfileX_RfGated->SetXTitle("Strip Number");
+                hProfileX_RfGated->SetYTitle("Counts");
                 AddHistogram(hProfileX_RfGated, "16_Strip_Main/Alpha_gate_Rf");
                 
                 // Creates histogram of number of counts per Y position, Rutherfordium gate
 
                 RemoveHistogram("ProfileY_RfGated");
                 hProfileY_RfGated = new TH1D("ProfileY_RfGated", "Counts vs Y position, rutherfordium Gated", 36,0,36);
+                //hProfileY_RfGated->
                 AddHistogram(hProfileY_RfGated, "16_Strip_Main/Alpha_gate_Rf");
      
                 // Creates 2D histogram of energy-TOF 
@@ -398,6 +481,7 @@ Strip16AnlProc::~Strip16AnlProc()
 {
   // cout << "**** Strip16AnlProc: Closing output file: " << fPrintPar->fPrtFilename << endl;
   //gOutputFile.close();
+    outfile.close();
  // cout << "1"<<endl;
 }
 
@@ -420,6 +504,9 @@ return (tested & (1 << position));
 // here the input event is beeing analysed and output event (which
 // comes as a parameter) is filled
 
+
+
+
 void Strip16AnlProc::Strip16EventAnalysis(Strip16AnlEvent* pOutEvent)
 {
 
@@ -429,13 +516,13 @@ void Strip16AnlProc::Strip16EventAnalysis(Strip16AnlEvent* pOutEvent)
  // Double_t egl[4]={0,0,0,0}, ege[4]={0,0,0,0}, esumge=0; //Ge detector
 
 
-  Float_t ey[4][16]={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+  Float_t ey[4][16]={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}; // calibrated energy
 
   Float_t ey_sum=0;
 
-  Double_t delta_Et[4][16] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+  Double_t delta_Et[4][16] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}; // position shift
 
-  Double_t calpost[4][16] ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+  Double_t calpost[4][16] ={{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};  // calibrated position
 
  // static Int_t el_bit_all = 0, el_2b = 0, eh_bit_all = 0, eh_2b = 0;
   //static Bool_t bEndOfPeriodReached_msg = kTRUE;
@@ -461,15 +548,35 @@ for(int j=0;j<16;j++){stripsum[1][j]=0;}
 
 
 //----------------------------- Calibration dssd Y-------------------------------
-// First correct for ballistic position effect
-  for(int i =0;i<4;i++){for(int j =0;j<16;j++){if(stripsum[1][j]>0){delta_Et[1][j]=(fCal->postA[1][j]*pow(Pos_t[1][j],2))+(fCal->postB[1][j]*Pos_t[1][j])+fCal->postC[1][j];
+// First correct for ballistic position effect, the data were approximated with a parabola equation Ax**2 + Bx + C, where A B C are the calibration constants (Calib_position.dat)
+  
+for(int i =0;i<4;i++){
+    for(int j =0;j<16;j++){
+        if(stripsum[1][j]>0){
+            delta_Et[1][j]=(fCal->postA[1][j]*pow(Pos_t[1][j],2))+(fCal->postB[1][j]*Pos_t[1][j])+fCal->postC[1][j];  // Reminder: fCal is the instance of the class Strip16CalibParameter; Pos_t defined in header
  //cout << "delta_Et " << delta_Et[1][j] << endl;
  calpost[i][j]=stripsum[i][j]- delta_Et[1][j]; //Energy correction
+              
+        }
+          
+    }
+      
+}
 
- }}}
- //Energy calibration
- for(int i =0;i<4;i++){for(int j =0;j<16;j++){if(stripsum[1][j]>0){ey[1][j]=fCal->A[1][j]*(calpost[1][j] + rand()%1000*0.001)  + fCal->B[1][j];
- }}}
+ //Energy calibration, obtained from a linear fit Ax + B (Calib_Energy.dat)
+ 
+ // Once we found calpost we can use it for this last step
+ 
+ for(int i =0;i<4;i++){ //NOTE Why loop on i? AKM 080824
+     for(int j =0;j<16;j++){
+         if(stripsum[1][j]>0){ey[1][j]=fCal->A[1][j]*(calpost[1][j] + rand()%1000*0.001)  + fCal->B[1][j];
+             
+        }         
+         
+    }
+
+}
+
 
 
 
@@ -478,13 +585,17 @@ for(int j=0;j<16;j++){stripsum[1][j]=0;}
 
  for(int i =1;i<3;i++){for(int j =0;j<16;j++){
      if(ey[i][j]>0){
-       h_corr_E[i][j]->Fill(calpost[i][j]); // Position corrected strips
-       h_stripcalib[i][j]->Fill(ey[i][j]); //Fully calibrated strips (E and Pos.)
+       h_corr_E[i][j]->Fill(calpost[i][j]); // 1D hist Position corrected strips
+       h_stripcalib[i][j]->Fill(ey[i][j]); // 1D hist paulse+pause Fully calibrated strips (E and Pos.)
 
-       ey_sum=ey[i][j];
-       if(ey_sum>0)  h_strip_sum->Fill(ey_sum);
-
-        //TOF
+       ey_sum=ey[i][j]; 
+       
+       if(ey_sum>0)  h_strip_sum->Fill(ey_sum); // 1D hist paulse+pause corrected energies
+       
+       
+       
+        /// TOF
+       
        if(tof==1){
 
          h_stripveto[i][j]->Fill(ey[i][j]);
@@ -494,13 +605,15 @@ for(int j=0;j<16;j++){stripsum[1][j]=0;}
        }
        
        if(tof==0){
-                h_stripantiveto[i][j]->Fill(ey[i][j]);
-                h_strip_antiveto_sum->Fill(ey_sum);
+           h_stripantiveto[i][j]->Fill(ey[i][j]);
+           h_strip_antiveto_sum->Fill(ey_sum);
        }
 
 
-         hEvsTOF->Fill(TOF_max,ey_sum);
-        //Pulse/Pause
+        hEvsTOF->Fill(TOF_max,ey_sum);
+        
+        
+        // Pulse and Pause
        if(macropulse==1){
          h_strippulse[i][j]->Fill(ey[i][j]);
          h_strip_pulse_sum->Fill(ey_sum);
@@ -516,6 +629,7 @@ for(int j=0;j<16;j++){stripsum[1][j]=0;}
 //               cout<<"PILEUP " << ey_sum << "Strip " << j <<  endl;
 //           }
           ///For 257Rf
+          
         if(j<11)  h_strip_pause_sum_llelf->Fill(ey_sum);
           }
 
@@ -540,27 +654,31 @@ for(int j=0;j<16;j++){stripsum[1][j]=0;}
      hProfileX->Fill(k);
      hProfileY->Fill(Pos_t[1][j]);
 
-     // alpha energy gates
+     /// alpha energy gates
+     ///NOTE need to remove hard coded gates and have a separate input file AKM 080824
+ // Nobelium gate    
  //    if((ey_sum > 7000) && (ey_sum < 9400) && macropulse==0){
      if((ey_sum > 5000) && (ey_sum < 7500) && macropulse==0){
         hProfileX_NoGated->Fill(k);
         hProfileY_NoGated->Fill(Pos_t[1][j]);
-    h_posvsstrip_Nogated->Fill(k,Pos_t[1][j]);
-    h_strip_Nogated_sum->Fill(ey_sum);
+        h_posvsstrip_Nogated->Fill(k,Pos_t[1][j]);
+        h_strip_Nogated_sum->Fill(ey_sum);
       }
-// Lr gate 8250-8700 AKM
-       if((ey_sum > 7900) && (ey_sum < 9500) && macropulse==0){
+// Lawrencium gate 8250-8700 AKM
+    if((ey_sum > 7900) && (ey_sum < 9500) && macropulse==0){
         hProfileX_LrGated->Fill(k);
         hProfileY_LrGated->Fill(Pos_t[1][j]);
-    h_posvsstrip_Lrgated->Fill(k,Pos_t[1][j]);
-    h_strip_Lrgated_sum->Fill(ey_sum);
+        h_posvsstrip_Lrgated->Fill(k,Pos_t[1][j]);
+        h_strip_Lrgated_sum->Fill(ey_sum);
       }
-   if((ey_sum > 9000) && (ey_sum < 9500) && macropulse==0){
+      
+// Rutherfordium gate
+    if((ey_sum > 9000) && (ey_sum < 9500) && macropulse==0){
        //if((((ey_sum > 8900) && (ey_sum < 9200))||((ey_sum > 8200) && (ey_sum < 8720))) && macropulse==0){
         hProfileX_RfGated->Fill(k);
         hProfileY_RfGated->Fill(Pos_t[1][j]);
-    h_posvsstrip_Rfgated->Fill(k,Pos_t[1][j]);
-    h_strip_Rfgated_sum->Fill(ey_sum);
+        h_posvsstrip_Rfgated->Fill(k,Pos_t[1][j]);
+        h_strip_Rfgated_sum->Fill(ey_sum);
       }
       
       if (macropulse==1){
@@ -598,22 +716,26 @@ for(int j=0;j<16;j++){stripsum[1][j]=0;}
         }
  }
 
-
-
+ 
 
 
 //=================== Fill output event =====================
 
+// Defined in the Strip16Anl.h class
+//NOTE is it really 1.7e-8? (17ns binning, thought it was 20ns?) AKM 080824
     pOutEvent->fE_kev = ey_sum;
     pOutEvent->fTAC = TOF_max;  //TAC
     pOutEvent->fTOF_bit = tof;  //TOF veto
     pOutEvent->fIDY = IDY;
     pOutEvent->fIDX = IDX;
-    pOutEvent->fTimeTrig = l_t_trig*1.7e-8;
-    pOutEvent->fTimeStrip = (l_t_trig+sample_time)*1.7e-8;           //times in [s]!
+    pOutEvent->fTimeTrig = l_t_trig*1.7e-2;
+    pOutEvent->fTimeStrip = (l_t_trig+sample_time)*1.7e-2;           //times in [mus]!
     pOutEvent->fB_pulse = macropulse;
 
+ //   cout<<"pOutEvent->fTimeTrig " <<pOutEvent->fTimeTrig << endl;
     pOutEvent->fev_num=fInput->event_number;
+    outfile  <<  pOutEvent->fev_num << " " <<pOutEvent->fTimeStrip << " " << pOutEvent->fIDX <<" "<< pOutEvent->fIDY << " " << pOutEvent->fE_kev <<" " <<  pOutEvent->fB_pulse << endl;
+    cout<< "Event Number " <<  pOutEvent->fev_num <<" Time " <<pOutEvent->fTimeStrip << " IDY " << pOutEvent->fIDY << " IDX " << pOutEvent->fIDX << " Energy " << pOutEvent->fE_kev << " Macro "<< pOutEvent->fB_pulse <<endl;
    // pOutEvent->fTrig = fInput->Trig;
     //pOutEvent->fmultihit=fInput->Multihit;
 
@@ -626,8 +748,50 @@ for(int j=0;j<16;j++){stripsum[1][j]=0;}
 
 
 
-}//end of analysis event
-//--------------------------------------------
+}//end of void function for analysis event
+
+
+//=================== Write CSV file ===================
+
+
+void Strip16AnlProc::writeCSV(TH1D* hist, const char* filename) {
+    std::ofstream file;
+    file.open(filename);
+    file << "bin_low_edge,bin_center,bin_content\n";
+    for (int i = 1; i <= hist->GetNbinsX(); ++i) {
+        double binLowEdge = hist->GetBinLowEdge(i);
+        double binCenter = hist->GetBinCenter(i);
+        double binContent = hist->GetBinContent(i);
+        file << binLowEdge << "," << binCenter << "," << binContent << "\n";
+    }
+    file.close();
+}
+
+
+ // Saving the histogram for pulse+pause corrected energy sum 
+ 
+void Strip16AnlProc::saveCSV(TH1D* hist,int i, int j) { 
+    // Save histogram to CSV after filling
+    std::ostringstream filename;
+    const char* filenamenew;
+    std::string filenamenew1;
+    
+    filenamenew1=filename.str();
+    filenamenew=filenamenew1.c_str();
+    filename << "h_strip_sum_" << i << "_" << j << ".csv";
+    writeCSV(hist, filenamenew);
+
+}
+ 
+
+
+
+
+
+
+
+//===================================================================
+
 // convert position from channels to mm
 
 Double_t Strip16AnlProc::PosCh2mm(const Double_t &pos)
@@ -638,6 +802,7 @@ Double_t Strip16AnlProc::PosCh2mm(const Double_t &pos)
 }
 
 // =================================================================
+
 // print a serie of 0 and 1
 
 void Strip16AnlProc::PrintBitPattern(const Int_t &pattern, ostream &output)
@@ -652,6 +817,7 @@ void Strip16AnlProc::PrintBitPattern(const Int_t &pattern, ostream &output)
 }
 
 void Strip16AnlProc::MapHardware() //NEED TO REMAKE IT AFTER YOU PLUG EVERUTHING -MARIJA
+
 {// ------------- assign crate positions to local variables ------------
   Int_t i;
   Int_t j;
@@ -693,6 +859,19 @@ for(i=0;i<4;i++){
     tof = fInput->TOF;
     l_t_trig= fInput->l_t_trig;
 
+}
+
+
+int main() {
+    
+    Strip16AnlProc proc;
+    
+    proc.saveCSV(proc.h_strip_sum, 1, 15);
+    
+    outfile.close();
+    
+    return 0;
+    
 }
 
 // =================================================================
