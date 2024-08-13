@@ -152,7 +152,7 @@ class Calib_position:
         results_dir = os.path.join(work_dir, 'results')
         output_filepath = os.path.join(results_dir, self.output_name)
 
-        text=open(self.output_name+strip_number+".dat", "w")
+        text=open(output_filepath+strip_number+".dat", "w")
 
         print("# Strip %s fit results" % strip_number, '\n', file=text)
         print(self.popt[0], self.popt[1], self.popt[2], file=text)
