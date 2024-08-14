@@ -38,18 +38,18 @@ class Calib_position:
         "This function plots a 2-d histogram of energy vs. strip position"
         # selecting only the relevant bins
         index = np.where(self.content!=0)
-        selected_energy = self.energy[index]
-        selected_position = self.position[index]
+        self.selected_energy = self.energy[index]
+        self.selected_position = self.position[index]
 
         # plotting the histogram
 
         plt.figure(figsize=(10,8))
 
-        self.height, self.xedges, self.yedges, self.image= plt.hist2d(selected_position, selected_energy, bins = (52, 100))
+        self.height, self.xedges, self.yedges, self.image= plt.hist2d(self.selected_position, self.selected_energy, bins = (52, 100))
         plt.colorbar()
         plt.xlabel("Strip position", fontsize=15)
         plt.ylabel("Channel", fontsize=15)
-        plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
+        plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)
 
         return self.height,self.xedges,self.yedges
 
@@ -57,7 +57,8 @@ class Calib_position:
     def plot_data(self, strip_number, plot=False):
         "This function selects the coordinates of the bin tip with most counts and plots them"
         # Find the indices where the bin counts are greater than 4 (number might change depending on data, check with the hist)
-        indices = np.where(self.height > 4)
+        thr = np.max(self.height) - 1
+        indices = np.where(self.height > thr)
 
         # Extract the bin edges corresponding to these indices
         x_coords = (self.xedges[indices[0]] + self.xedges[indices[0] + 1]) / 2
@@ -94,24 +95,24 @@ class Calib_position:
 
         # first curve
         index1 = np.where(cond1)
-        yy1 = self.yy[index1]
+        self.yy1 = self.yy[index1]
         xx1 = self.xx[index1]
 
         # second curve
         index2 = np.where(np.logical_and(cond2_a, cond2_b))
-        yy2 = self.yy[index2]
+        self.yy2 = self.yy[index2]
         xx2 = self.xx[index2]
 
         # third curve
         index3 = np.where(cond3)
-        yy3 = self.yy[index3]
+        self.yy3 = self.yy[index3]
         xx3 = self.xx[index3]
 
         # trying to fit all three
         self.fit_model = f.parabola
-        self.popt, self.pcov = optimize.curve_fit(self.fit_model, xx1, yy1)
-        self.popt2, self.pcov2 = optimize.curve_fit(self.fit_model, xx2, yy2)
-        self.popt3, self.pcov3 = optimize.curve_fit(self.fit_model, xx3, yy3)
+        self.popt, self.pcov = optimize.curve_fit(self.fit_model, xx1, self.yy1)
+        self.popt2, self.pcov2 = optimize.curve_fit(self.fit_model, xx2, self.yy2)
+        self.popt3, self.pcov3 = optimize.curve_fit(self.fit_model, xx3, self.yy3)
 
         # plotting the fit for the first curve
 
@@ -155,11 +156,30 @@ class Calib_position:
         text=open(output_filepath+strip_number+".dat", "w")
 
         print("# Strip %s fit results" % strip_number, '\n', file=text)
-        print(self.popt[0], self.popt[1], self.popt[2], file=text)
-        print(self.popt2[0], self.popt2[1], self.popt2[2], file=text)
-        print(self.popt3[0], self.popt3[1], self.popt3[2], file=text)
+        print(self.popt[0], self.popt[1], self.popt[2] - np.min(self.yy1), file=text)
+        print(self.popt2[0], self.popt2[1], self.popt2[2] - np.min(self.yy2), file=text)
+        print(self.popt3[0], self.popt3[1], self.popt3[2] - np.min(self.yy3), file=text)
 
         text.close()
+
+
+    def plot_calib_hist(self, lower_bound, upper_bound, strip_number):
+        "This function subtracts the curve obtained and plot the corrected histogram"
+        for jj in range(len(self.selected_energy)-1):
+            if self.selected_energy[jj]<lower_bound:
+                self.selected_energy[jj] = self.selected_energy[jj] - self.fit_model(self.selected_position[jj], *self.popt) + np.min(self.yy1)
+            elif self.selected_energy[jj]>upper_bound:
+                self.selected_energy[jj] = self.selected_energy[jj] - self.fit_model(self.selected_position[jj], *self.popt3) + np.min(self.yy2)
+            else:
+                self.selected_energy[jj] = self.selected_energy[jj] - self.fit_model(self.selected_position[jj], *self.popt2) + np.min(self.yy3)
+
+
+        plt.figure(figsize=(10,8))
+        h,xedges,yedges,image= plt.hist2d(self.selected_position, self.selected_energy, bins = (52, 100))
+        plt.colorbar()
+        plt.xlabel("Strip position", fontsize=15)
+        plt.ylabel("Channel", fontsize=15)
+        plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
 
 
