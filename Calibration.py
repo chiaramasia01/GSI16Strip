@@ -40,29 +40,44 @@ class Calib_position:
         index = np.where(self.content!=0)
         self.selected_energy = self.energy[index]
         self.selected_position = self.position[index]
+        self.selected_content = self.content[index[0]]
 
-        # plotting the histogram
+        # Determine the number of unique bins in x and y
+        x_bins = np.unique(self.selected_position)
+        y_bins = np.unique(self.selected_energy)
 
-        plt.figure(figsize=(10,8))
+        # Original number of bins
+        original_x_bins = len(x_bins)
+        original_y_bins = len(y_bins)
 
-        self.height, self.xedges, self.yedges, self.image= plt.hist2d(self.selected_position, self.selected_energy, bins = (52, 100))
-        plt.colorbar()
-        plt.xlabel("Strip position", fontsize=15)
-        plt.ylabel("Channel", fontsize=15)
+        # Define the desired number of bins
+        new_x_bins = 26  # Modify as needed
+        new_y_bins = 200  # Modify as needed
+
+        # Calculate the new bin edges
+        self.x_edges = np.linspace(x_bins.min(), x_bins.max(), new_x_bins + 1)
+        self.y_edges = np.linspace(y_bins.min(), y_bins.max(), new_y_bins + 1)
+
+        # Re-bin the counts
+        self.counts_2d, _, _ = np.histogram2d(self.selected_position, self.selected_energy, bins=[self.x_edges, self.y_edges], weights=self.selected_content)
+
+        # Plot the re-binned 2D histogram using imshow
+        plt.figure(figsize=(10,6))
+        plt.imshow(self.counts_2d.T, origin='lower', extent=[x_bins.min(), x_bins.max(), y_bins.min(), y_bins.max()], aspect='auto', cmap='twilight')
+        plt.colorbar(label='Counts')
+        plt.xlabel('Position')
+        plt.ylabel('Energy')
         plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)
-
-        return self.height,self.xedges,self.yedges
 
 
     def plot_data(self, strip_number, plot=False):
         "This function selects the coordinates of the bin tip with most counts and plots them"
         # Find the indices where the bin counts are greater than 4 (number might change depending on data, check with the hist)
-        thr = np.max(self.height) - 1
-        indices = np.where(self.height > thr)
+        indices = np.where(self.counts_2d > 10)
 
         # Extract the bin edges corresponding to these indices
-        x_coords = (self.xedges[indices[0]] + self.xedges[indices[0] + 1]) / 2
-        y_coords = (self.yedges[indices[1]] + self.yedges[indices[1] + 1]) / 2
+        x_coords = (self.x_edges[indices[0]] + self.x_edges[indices[0] + 1]) / 2
+        y_coords = (self.y_edges[indices[1]] + self.y_edges[indices[1] + 1]) / 2
 
         xx = []
         yy = []
@@ -174,11 +189,31 @@ class Calib_position:
                 self.selected_energy[jj] = self.selected_energy[jj] - self.fit_model(self.selected_position[jj], *self.popt2) + np.min(self.yy3)
 
 
-        plt.figure(figsize=(10,8))
-        h,xedges,yedges,image= plt.hist2d(self.selected_position, self.selected_energy, bins = (52, 100))
-        plt.colorbar()
-        plt.xlabel("Strip position", fontsize=15)
-        plt.ylabel("Channel", fontsize=15)
+        # Determine the number of unique bins in x and y
+        x_bins = np.unique(self.selected_position)
+        y_bins = np.unique(self.selected_energy)
+
+        # Original number of bins
+        original_x_bins = len(x_bins)
+        original_y_bins = len(y_bins)
+
+        # Define the desired number of bins
+        new_x_bins = 26  # Modify as needed
+        new_y_bins = 200  # Modify as needed
+
+        # Calculate the new bin edges
+        self.x_edges = np.linspace(x_bins.min(), x_bins.max(), new_x_bins + 1)
+        self.y_edges = np.linspace(y_bins.min(), y_bins.max(), new_y_bins + 1)
+
+        # Re-bin the counts
+        self.counts_2d, _, _ = np.histogram2d(self.selected_position, self.selected_energy, bins=[self.x_edges, self.y_edges], weights=self.selected_content)
+
+        # Plot the re-binned 2D histogram using imshow
+        plt.figure(figsize=(10,6))
+        plt.imshow(self.counts_2d.T, origin='lower', extent=[x_bins.min(), x_bins.max(), y_bins.min(), y_bins.max()], aspect='auto', cmap='twilight')
+        plt.colorbar(label='Counts')
+        plt.xlabel('Position')
+        plt.ylabel('Energy')
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
 
@@ -186,6 +221,40 @@ class Calib_position:
 
 
 
+class Calib_energy:
+    "This class should perform the second step of the calibration for the 16 strip"
+    def __init__(self, x_label, y_label):
+        "Constructor"
+        self.xlabel=x_label
+        self.ylabel=y_label
 
 
-        
+    def read_data(self, filename):
+        "Defining directories and creating filepath to open file, connected to read_hdat"
+        work_dir = os.getcwd()
+        data_dir = os.path.join(work_dir, "Uncalib_position")
+
+        filepath = os.path.join(data_dir,filename)
+        self.name=filename
+        self.read_hdat(filepath)
+
+
+    def read_hdat(self, filepath):
+        "This function opens file and creates data frame"
+        my_df = pd.read_csv(filepath, sep="\t", header=1) 
+        self.energy = my_df[self.xlabel].to_numpy()
+        self.content = my_df[self.ylabel].to_numpy()
+
+    '''    
+    def plot_hist(self, strip_number):
+        "This function plots a 1-d histogram of energy"
+
+        # plotting the histogram
+
+        plt.figure(figsize=(10,8))
+
+        self.height, self.binedges, _ = plt.hist(self.energy)
+        plt.colorbar()
+        plt.xlabel("Strip position", fontsize=15)
+        plt.ylabel("Channel", fontsize=15)
+        plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)'''
