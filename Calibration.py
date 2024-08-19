@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import optimize
 import function as f
+from scipy.signal import find_peaks
+
+
 
 class Calib_position:
 
@@ -222,7 +225,9 @@ class Calib_position:
 
 
 class Calib_energy:
+
     "This class should perform the second step of the calibration for the 16 strip"
+
     def __init__(self, x_label, y_label):
         "Constructor"
         self.xlabel=x_label
@@ -232,7 +237,7 @@ class Calib_energy:
     def read_data(self, filename):
         "Defining directories and creating filepath to open file, connected to read_hdat"
         work_dir = os.getcwd()
-        data_dir = os.path.join(work_dir, "Uncalib_position")
+        data_dir = os.path.join(work_dir, "Uncalib_energy")
 
         filepath = os.path.join(data_dir,filename)
         self.name=filename
@@ -245,7 +250,7 @@ class Calib_energy:
         self.energy = my_df[self.xlabel].to_numpy()
         self.content = my_df[self.ylabel].to_numpy()
 
-    '''    
+        
     def plot_hist(self, strip_number):
         "This function plots a 1-d histogram of energy"
 
@@ -253,8 +258,154 @@ class Calib_energy:
 
         plt.figure(figsize=(10,8))
 
-        self.height, self.binedges, _ = plt.hist(self.energy)
-        plt.colorbar()
+        plt.bar(self.energy, self.content, width=10)
+        plt.xlabel("Channel", fontsize=15)
+        plt.ylabel("Content", fontsize=15)
+        plt.title("Histogram of position corrected energy strip %s" % strip_number, fontsize=20)
+        plt.xlim(3000, 4000)
+        plt.grid(True)
+
+
+    def initial_guess(self,plot=False):
+        """Finds peaks and from that creates 
+        the initial values for the fit"""
+        index,_=find_peaks(self.content,prominence=200)
+            
+        if plot==True:
+            plt.errorbar(self.energy[index],self.content[index],fmt='o', label='peaks', color='orange')
+
+        guess=[0]
+        for ii in index:
+            guess.append(self.content[ii]) # amplitude
+            guess.append(self.energy[ii]) # mean
+            guess.append(50) # sigma
+
+        return guess
+
+
+    def fit_gauss(self, strip_number):
+        "This function performs a gaussian fit of the data with three gaussians"
+
+        self.fit_model = f.multi_gauss3
+        init = self.initial_guess()
+        dy = np.ones(len(self.content))*10
+        self.popt, self.pcov = optimize.curve_fit(self.fit_model, self.energy, self.content, sigma = dy, p0=init)
+        plt.figure(figsize=(10,8))
+        plt.bar(self.energy, self.content, width=10, label='data')
+        xx = np.linspace(min(self.energy), max(self.energy), 5000)
+        plt.plot(xx, self.fit_model(xx, *self.popt), "r-", label='fit')
+
         plt.xlabel("Strip position", fontsize=15)
         plt.ylabel("Channel", fontsize=15)
-        plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)'''
+        plt.title("Plot of position corrected energy strip %s" % strip_number, fontsize=20)
+        plt.legend(loc='best')
+        plt.grid(True)
+        plt.xlim(3100,3900)
+
+        self.fit_results()
+
+
+    def fit_results(self):
+        "This function prints the best fit parameters with their error"
+        print("c0 =", self.popt[0], "+/-", self.pcov[0,0]**0.5)
+        print("c1 =", self.popt[1], "+/-", self.pcov[1,1]**0.5)
+        print("m1 =", self.popt[2], "+/-", self.pcov[2,2]**0.5)
+        print("s1 =", self.popt[3], "+/-", self.pcov[3,3]**0.5)
+        print("c2 =", self.popt[4], "+/-", self.pcov[4,4]**0.5)
+        print("m2 =", self.popt[5], "+/-", self.pcov[5,5]**0.5)
+        print("s2 =", self.popt[6], "+/-", self.pcov[6,6]**0.5)
+        print("c3 =", self.popt[7], "+/-", self.pcov[7,7]**0.5)
+        print("m3 =", self.popt[8], "+/-", self.pcov[8,8]**0.5)
+        print("s3 =", self.popt[9], "+/-", self.pcov[9,9]**0.5)
+
+
+    def write_txt(self, output_filename, strip_number):
+        "This function writes fit results in a text file"
+        self.output_name = output_filename
+        work_dir = os.getcwd()
+        results_dir = os.path.join(work_dir, 'results')
+        output_filepath = os.path.join(results_dir, self.output_name)
+
+        text=open(output_filepath+strip_number+".dat", "w")
+
+        print("# Strip %s gauss fit results" % strip_number, '\n', file=text)
+        print(self.popt[2], self.pcov[2,2]**0.5, file=text)
+        print(self.popt[5], self.pcov[5,5]**0.5, file=text)
+        print(self.popt[8], self.pcov[8,8]**0.5, file=text)
+        
+
+        text.close()
+
+
+
+
+class Calib_channel:
+
+    " This class should perform the final step of the calibration returning the conversion factor between energy and channel "
+    def __init__(self, energy_1, energy_2, energy_3):
+        "Constructor, defining the tabulated energies of the three alpha peaks"
+        self.energy1 = energy_1
+        self.energy2 = energy_2
+        self.energy3 = energy_3
+        self.energy = np.array([self.energy1, self.energy2, self.energy3])
+
+    def read_txt(self, filename):
+        "This function reads the data from a text file"
+        work_dir = os.getcwd()
+        data_dir = os.path.join(work_dir, "results")
+
+        filepath = os.path.join(data_dir,filename)
+        self.name=filename
+        self.channel, self.error = np.loadtxt(filepath, comments='#', unpack=True)
+
+
+    def plot_errorbar(self, strip_number, plot=True):
+    
+        "This function plots an errorbar of channel-energy data"
+        if plot==True:
+            plt.figure(figsize=(10,6))
+            plt.errorbar(self.energy, self.channel, yerr=self.error, fmt='.', label='data')
+            plt.xlabel('Energy [keV]')
+            plt.ylabel('Channel [keV]')
+            plt.title('Plot of channel number vs. energy strip %s' % strip_number)
+            plt.grid(True)
+
+
+    def fit_line(self, strip_number, plot=True):
+
+        "This function performs and plot the fit"
+
+        self.fit_model = f.line
+        self.popt, self.pcov = optimize.curve_fit(self.fit_model, self.energy, self.channel, sigma=self.error)
+        self.fit_results()
+    
+
+        if plot==True:
+            self.plot_errorbar(strip_number)
+            xx = np.linspace(5100,5900,1000)
+            plt.plot(xx, self.fit_model(xx, *self.popt), "r-", label='fit')
+            plt.legend()
+            plt.grid(True)
+
+
+    def fit_results(self):
+        "This function prints the best fit parameters with their error"
+
+        print("m =", self.popt[0], "+/-", self.pcov[0,0]**0.5)
+        print("q =", self.popt[1], "+/-", self.pcov[1,1]**0.5)
+
+
+    def write_txt(self, output_filename, strip_number):
+        "This function writes fit results in a text file"
+        self.output_name = output_filename
+        work_dir = os.getcwd()
+        results_dir = os.path.join(work_dir, 'results')
+        output_filepath = os.path.join(results_dir, self.output_name)
+
+        text=open(output_filepath+strip_number+".dat", "w")
+
+        print("# Strip %s fit results" % strip_number, '\n', file=text)
+        print(self.popt[0], self.popt[1], file=text)
+
+
+        text.close()
