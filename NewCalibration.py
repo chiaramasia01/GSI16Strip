@@ -193,7 +193,7 @@ class Calib_position:
         plt.colorbar(label='Counts')
         plt.xlabel('Position')
         plt.ylabel('Energy')
-        plt.ylim(5000,6000)
+        plt.ylim(5000,5300)
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
 
