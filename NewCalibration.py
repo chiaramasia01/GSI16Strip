@@ -8,6 +8,11 @@ import function as f
 from scipy.signal import find_peaks
 
 
+# C. Masia
+# Summer student program 2024
+# any questions or suggestions chiara.masia01@gmail.com
+
+
 
 class Calib_position:
 
