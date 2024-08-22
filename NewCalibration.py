@@ -37,7 +37,7 @@ class Calib_position:
 
 
     def plot_hist(self, strip_number):
-        "This function plots a 2-d histogram of energy vs. strip position"
+        "This function plots a 2-d histogram of energy vs. strip position for each single strip"
         # selecting only the data for the single strip
 
         index = self.my_df['Stripnum'].loc[self.my_df['Stripnum'] == strip_number].index
@@ -193,7 +193,7 @@ class Calib_position:
         plt.colorbar(label='Counts')
         plt.xlabel('Position')
         plt.ylabel('Energy')
-        plt.ylim(5000,5300)
+        plt.ylim(5000,6000)
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
 
@@ -338,10 +338,10 @@ class Calib_channel:
         "This function plots an errorbar of channel-energy data"
         if plot==True:
             plt.figure(figsize=(10,6))
-            plt.errorbar(self.energy, self.channel, yerr=self.error, fmt='.', label='data')
-            plt.xlabel('Energy [keV]')
-            plt.ylabel('Channel [keV]')
-            plt.title('Plot of channel number vs. energy strip %s' % strip_number)
+            plt.errorbar(self.channel, self.energy, yerr=self.error, fmt='.', label='data')
+            plt.ylabel('Energy [keV]')
+            plt.xlabel('Channel [keV]')
+            plt.title('Plot of energy vs. channel number strip %s' % strip_number)
             plt.grid(True)
 
 
@@ -350,7 +350,7 @@ class Calib_channel:
         "This function performs and plot the fit"
 
         self.fit_model = f.line
-        self.popt, self.pcov = optimize.curve_fit(self.fit_model, self.energy, self.channel, sigma=self.error)
+        self.popt, self.pcov = optimize.curve_fit(self.fit_model, self.channel, self.energy, sigma=self.error)
         self.fit_results()
     
 
