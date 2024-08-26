@@ -202,6 +202,23 @@ class Calib_position:
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
 
+    def save_hist_data(self, output_filename, strip_number):
+        "This function extracts the data from the corrected histogram and saves it in a txt file"
+        self.output_name = output_filename
+        work_dir = os.getcwd()
+        results_dir = os.path.join(work_dir, 'Uncalib_energy')
+        output_filepath = os.path.join(results_dir, self.output_name)
+
+        text=open(output_filepath+str(strip_number)+".dat", "w")
+
+        print("# Strip %s balistic calibration results" % strip_number, '\n', file=text)
+        print("#position #energy #content #xedges #yedges", '\n', file=text)
+
+        print(self.position_sel, self.energy_sel, self.h, self.xedges, self.yedges, file=text)
+
+        text.close()        
+
+
 
 class Calib_energy:
 
