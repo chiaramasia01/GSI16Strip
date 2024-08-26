@@ -166,11 +166,11 @@ class Calib_position:
         print("c3 =", self.popt3[2], "+/-", self.pcov3[2,2]**0.5)
 
 
-    def write_txt(self, output_filename, strip_number, energy_1, energy_2, energy_3):
+    def write_txt(self, output_filename, strip_number, energy_1, energy_2, energy_3, sparechip):
         "This function writes fit results in a text file"
         self.output_name = output_filename
         work_dir = os.getcwd()
-        results_dir = os.path.join(work_dir, 'results')
+        results_dir = os.path.join(work_dir, 'results/'+sparechip)
         output_filepath = os.path.join(results_dir, self.output_name)
 
         text=open(output_filepath+str(strip_number)+".dat", "w")
@@ -315,11 +315,11 @@ class Calib_energy:
         print("s3 =", self.popt[9], "+/-", self.pcov[9,9]**0.5)
 
 
-    def write_txt(self, output_filename, strip_number):
+    def write_txt(self, output_filename, strip_number, chipnumber):
         "This function writes fit results in a text file"
         self.output_name = output_filename
         work_dir = os.getcwd()
-        results_dir = os.path.join(work_dir, 'results')
+        results_dir = os.path.join(work_dir, 'results/'+chipnumber)
         output_filepath = os.path.join(results_dir, self.output_name)
 
         text=open(output_filepath+strip_number+".dat", "w")
@@ -391,11 +391,11 @@ class Calib_channel:
         print("q =", self.popt[1], "+/-", self.pcov[1,1]**0.5)
 
 
-    def write_txt(self, output_filename, strip_number):
+    def write_txt(self, output_filename, strip_number, sparechip):
         "This function writes fit results in a text file"
         self.output_name = output_filename
         work_dir = os.getcwd()
-        results_dir = os.path.join(work_dir, 'results')
+        results_dir = os.path.join(work_dir, 'results/'+sparechip)
         output_filepath = os.path.join(results_dir, self.output_name)
 
         text=open(output_filepath+strip_number+".dat", "w")
