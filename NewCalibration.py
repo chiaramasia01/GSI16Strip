@@ -245,10 +245,10 @@ class Calib_energy:
         self.ylabel=y_label
 
 
-    def read_data(self, filename):
+    def read_data(self, filename, sparechip):
         "Defining directories and creating filepath to open file, connected to read_hdat"
         work_dir = os.getcwd()
-        data_dir = os.path.join(work_dir, "Uncalib_energy")
+        data_dir = os.path.join(work_dir, "Uncalib_energy/"+str(sparechip))
 
         filepath = os.path.join(data_dir,filename)
         self.name=filename
@@ -257,8 +257,7 @@ class Calib_energy:
 
     def read_hdat(self, filepath):
         "This function opens file and creates data frame"
-        my_df = pd.read_csv(filepath, sep=" ", header=1, skip_blank_lines=True) 
-        print(my_df.columns)
+        my_df = pd.read_csv(filepath, sep="\t", header=1, skip_blank_lines=True) 
         self.energy = my_df[self.xlabel].to_numpy()
         self.content = my_df[self.ylabel].to_numpy()
 
@@ -281,17 +280,17 @@ class Calib_energy:
     def initial_guess(self,plot=False):
         """Finds peaks and from that creates 
         the initial values for the fit"""
-        index,_=find_peaks(self.content,prominence=3)
+        index,_=find_peaks(self.content,prominence=200)
             
         if plot==True:
             plt.errorbar(self.energy[index],self.content[index],fmt='o', label='peaks', color='orange')
 
-        guess=[]
+        guess=[0]
         for ii in index:
             guess.append(self.content[ii]) # amplitude
             guess.append(self.energy[ii]) # mean
             guess.append(50) # sigma
-        print(guess)
+        
         return guess
 
 
@@ -335,7 +334,7 @@ class Calib_energy:
         "This function writes fit results in a text file"
         self.output_name = output_filename
         work_dir = os.getcwd()
-        results_dir = os.path.join(work_dir, 'results/'+chipnumber)
+        results_dir = os.path.join(work_dir, 'results/'+str(chipnumber))
         output_filepath = os.path.join(results_dir, self.output_name)
 
         text=open(output_filepath+strip_number+".dat", "w")
@@ -361,10 +360,10 @@ class Calib_channel:
         self.energy3 = energy_3
         self.energy = np.array([self.energy1, self.energy2, self.energy3])
 
-    def read_txt(self, filename):
+    def read_txt(self, filename, sparechip):
         "This function reads the data from a text file"
         work_dir = os.getcwd()
-        data_dir = os.path.join(work_dir, "results")
+        data_dir = os.path.join(work_dir, "results/"+str(sparechip))
 
         filepath = os.path.join(data_dir,filename)
         self.name=filename
