@@ -56,8 +56,8 @@ class Calib_position:
         plt.figure(figsize=(10,6))
         self.h, self.xedges, self.yedges, _ = plt.hist2d(self.position_sel, self.energy_sel, bins=(42,500), cmap='twilight')
         plt.colorbar(label='Counts')
-        plt.xlabel('Position')
-        plt.ylabel('Energy')
+        plt.xlabel('Position [mm]', fontsize=15)
+        plt.ylabel('Channel [keV]', fontsize=15)
         plt.ylim(3000,4000)
         plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)
 
@@ -207,8 +207,8 @@ class Calib_position:
         plt.figure(figsize=(10,6))
         self.h, self.xedges, self.yedges, _ = plt.hist2d(self.position_sel, self.energy_sel, bins=(42,500), cmap='twilight')
         plt.colorbar(label='Counts')
-        plt.xlabel('Position')
-        plt.ylabel('Energy')
+        plt.xlabel('Position [mm]', fontsize=15)
+        plt.ylabel('Channel [keV]', fontsize=15)
         plt.ylim(5000,6000)
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
