@@ -62,7 +62,7 @@ class Calib_position:
         plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)
 
 
-    def plot_data(self, strip_number, count_threshold, plot=False):
+    def plot_data(self, strip_number, count_threshold, plot=False):  # change from false to true to display the plot
         "This function selects the coordinates of the bins with counts greater than a threshold and plots them"
 
         # Get the bin centers
@@ -127,12 +127,14 @@ class Calib_position:
         self.yy3 = self.yy[index3]
         self.xx3 = self.xx[index3]
 
+
         # trying to fit all three
+          
         self.fit_model = f.parabola
-        guess = [0.2, -7, -1700]
+        guess = [0.1, -5, 3700]
         self.popt, self.pcov = optimize.curve_fit(self.fit_model, self.xx1, self.yy1, p0=guess)
         self.popt2, self.pcov2 = optimize.curve_fit(self.fit_model, self.xx2, self.yy2, p0=guess)
-        self.popt3, self.pcov3 = optimize.curve_fit(self.fit_model, self.xx3, self.yy3, p0=guess)
+        
 
         # plotting the fit for the first curve
 
@@ -147,10 +149,14 @@ class Calib_position:
         # plotting the fit for the second curve
         plt.plot(self.xx, self.fit_model(self.xx, *self.popt2), "r-")
 
-        # plotting the fit for the third curve
-        plt.plot(self.xx, self.fit_model(self.xx, *self.popt3), "r-")
+
         plt.legend(loc='best')
         plt.grid(True)
+
+        if len(self.yy3)>3:
+            self.popt3, self.pcov3 = optimize.curve_fit(self.fit_model, self.xx3, self.yy3, p0=guess)
+            # plotting the fit for the third curve
+            plt.plot(self.xx, self.fit_model(self.xx, *self.popt3), "r-")
 
 
     def fit_results(self):
@@ -161,9 +167,10 @@ class Calib_position:
         print("a2 =", self.popt2[0], "+/-", self.pcov2[0,0]**0.5)
         print("b2 =", self.popt2[1], "+/-", self.pcov2[1,1]**0.5)
         print("c2 =", self.popt2[2], "+/-", self.pcov2[2,2]**0.5)
-        print("a3 =", self.popt3[0], "+/-", self.pcov3[0,0]**0.5)
-        print("b3 =", self.popt3[1], "+/-", self.pcov3[1,1]**0.5)
-        print("c3 =", self.popt3[2], "+/-", self.pcov3[2,2]**0.5)
+        if len(self.yy3)>3:
+            print("a3 =", self.popt3[0], "+/-", self.pcov3[0,0]**0.5)
+            print("b3 =", self.popt3[1], "+/-", self.pcov3[1,1]**0.5)
+            print("c3 =", self.popt3[2], "+/-", self.pcov3[2,2]**0.5)
 
 
     def write_txt(self, output_filename, strip_number, energy_1, energy_2, energy_3, sparechip):
@@ -178,13 +185,17 @@ class Calib_position:
         print("# Strip %s fit results" % strip_number, '\n', file=text)
         print(self.popt[0], self.popt[1], self.popt[2] - energy_1, file=text)
         print(self.popt2[0], self.popt2[1], self.popt2[2] - energy_2, file=text)
-        print(self.popt3[0], self.popt3[1], self.popt3[2] - energy_3, file=text)
+        if len(self.yy3)>3:
+            print(self.popt3[0], self.popt3[1], self.popt3[2] - energy_3, file=text)
 
         text.close()
 
 
     def plot_calib_hist(self, lower_bound, upper_bound, strip_number, energy_1, energy_2, energy_3):
         "This function subtracts the curve obtained and plot the corrected histogram"
+        if len(self.yy3)<=3:
+            self.popt3 = self.popt2
+
         for jj in range(len(self.energy_sel)-1):
             if self.energy_sel[jj]<lower_bound:
                 self.energy_sel[jj] = self.energy_sel[jj] - self.fit_model(self.position_sel[jj], *self.popt) + energy_1
@@ -209,12 +220,16 @@ class Calib_position:
         results_dir = os.path.join(work_dir, 'Uncalib_energy')
         output_filepath = os.path.join(results_dir, self.output_name)
 
-        text=open(output_filepath+str(strip_number)+".dat", "w")
+        text=open(output_filepath, "w")
 
         print("# Strip %s balistic calibration results" % strip_number, '\n', file=text)
-        print("#position #energy #content #xedges #yedges", '\n', file=text)
+        print("#energy #content", '\n', file=text)
 
-        print(self.position_sel, self.energy_sel, self.h, self.xedges, self.yedges, file=text)
+        # getting bin centers
+        ycenters = (self.yedges[:-1] + self.yedges[1:])/2
+        
+        for jj in range(len(ycenters)):
+            print(ycenters[jj], self.h[1][jj], file=text)
 
         text.close()        
 
@@ -242,7 +257,8 @@ class Calib_energy:
 
     def read_hdat(self, filepath):
         "This function opens file and creates data frame"
-        my_df = pd.read_csv(filepath, sep="\t", header=1) 
+        my_df = pd.read_csv(filepath, sep=" ", header=1, skip_blank_lines=True) 
+        print(my_df.columns)
         self.energy = my_df[self.xlabel].to_numpy()
         self.content = my_df[self.ylabel].to_numpy()
 
@@ -265,17 +281,17 @@ class Calib_energy:
     def initial_guess(self,plot=False):
         """Finds peaks and from that creates 
         the initial values for the fit"""
-        index,_=find_peaks(self.content,prominence=200)
+        index,_=find_peaks(self.content,prominence=3)
             
         if plot==True:
             plt.errorbar(self.energy[index],self.content[index],fmt='o', label='peaks', color='orange')
 
-        guess=[0]
+        guess=[]
         for ii in index:
             guess.append(self.content[ii]) # amplitude
             guess.append(self.energy[ii]) # mean
             guess.append(50) # sigma
-
+        print(guess)
         return guess
 
 
