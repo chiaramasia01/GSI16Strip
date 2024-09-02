@@ -54,12 +54,16 @@ class Calib_position:
         self.energy_sel = self.energy[self.energy!=0] 
         self.position_sel = self.position[self.energy!=0]
         plt.figure(figsize=(10,6))
+        ax=plt.gca()
         self.h, self.xedges, self.yedges, _ = plt.hist2d(self.position_sel, self.energy_sel, bins=(42,500), cmap='twilight')
         plt.colorbar(label='Counts')
         plt.xlabel('Position [mm]', fontsize=15)
         plt.ylabel('Channel [arb.un.]', fontsize=15)
         plt.ylim(3000,4000)
         plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)
+        plt.text(0.75, 0.24, 'plutonium-239', transform=ax.transAxes, fontsize=15)
+        plt.text(0.74, 0.51, 'americium-241', transform=ax.transAxes, fontsize=15)
+        plt.text(0.8, 0.82, 'curium-244', transform=ax.transAxes, fontsize=15)
 
 
     def plot_data(self, strip_number, count_threshold, plot=False):  # change from false to true to display the plot
@@ -205,12 +209,16 @@ class Calib_position:
                 self.energy_sel[jj] = self.energy_sel[jj] - self.fit_model(self.position_sel[jj], *self.popt2) + energy_2
 
         plt.figure(figsize=(10,6))
+        ax=plt.gca()
         self.h, self.xedges, self.yedges, _ = plt.hist2d(self.position_sel, self.energy_sel, bins=(42,500), cmap='twilight')
         plt.colorbar(label='Counts')
         plt.xlabel('Position [mm]', fontsize=15)
         plt.ylabel('Channel [arb.un.]', fontsize=15)
         plt.ylim(5000,6000)
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
+        plt.text(0.75, 0.2, 'plutonium-239', transform=ax.transAxes, fontsize=15)
+        plt.text(0.74, 0.51, 'americium-241', transform=ax.transAxes, fontsize=15)
+        plt.text(0.8, 0.82, 'curium-244', transform=ax.transAxes, fontsize=15)
 
 
     def save_hist_data(self, output_filename, strip_number):
