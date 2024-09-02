@@ -57,7 +57,7 @@ class Calib_position:
         self.h, self.xedges, self.yedges, _ = plt.hist2d(self.position_sel, self.energy_sel, bins=(42,500), cmap='twilight')
         plt.colorbar(label='Counts')
         plt.xlabel('Position [mm]', fontsize=15)
-        plt.ylabel('Channel [keV]', fontsize=15)
+        plt.ylabel('Channel [arb.un.]', fontsize=15)
         plt.ylim(3000,4000)
         plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)
 
@@ -95,8 +95,8 @@ class Calib_position:
             plt.figure(figsize=(10, 8))
             plt.scatter(selected_x_coords, selected_y_coords, c=selected_counts, cmap='viridis', label='Data')
             plt.colorbar(label='Counts')
-            plt.xlabel("Strip position", fontsize=15)
-            plt.ylabel("Channel", fontsize=15)
+            plt.xlabel("Strip position [mm]", fontsize=15)
+            plt.ylabel("Channel [arb.un.]", fontsize=15)
             plt.title(f"Scatter plot of Energy vs Calib Position strip {strip_number}", fontsize=20)
             plt.grid(True)
             plt.legend()
@@ -142,8 +142,8 @@ class Calib_position:
         plt.scatter(self.xx,self.yy, label='Data')
         plt.plot(self.xx, self.fit_model(self.xx, *self.popt), "r-", label='fit')
 
-        plt.xlabel("Strip position", fontsize=15)
-        plt.ylabel("Channel", fontsize=15)
+        plt.xlabel("Strip position [mm]", fontsize=15)
+        plt.ylabel("Channel [arb.un.]", fontsize=15)
         plt.title("Scatter plot of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
         # plotting the fit for the second curve
@@ -208,7 +208,7 @@ class Calib_position:
         self.h, self.xedges, self.yedges, _ = plt.hist2d(self.position_sel, self.energy_sel, bins=(42,500), cmap='twilight')
         plt.colorbar(label='Counts')
         plt.xlabel('Position [mm]', fontsize=15)
-        plt.ylabel('Channel [keV]', fontsize=15)
+        plt.ylabel('Channel [arb.un.]', fontsize=15)
         plt.ylim(5000,6000)
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
 
@@ -306,8 +306,8 @@ class Calib_energy:
         xx = np.linspace(min(self.energy), max(self.energy), 5000)
         plt.plot(xx, self.fit_model(xx, *self.popt), "r-", label='fit')
 
-        plt.xlabel("Strip position", fontsize=15)
-        plt.ylabel("Channel", fontsize=15)
+        plt.xlabel("Strip position [mm]", fontsize=15)
+        plt.ylabel("Channel [arb.un.]", fontsize=15)
         plt.title("Plot of position corrected energy strip %s" % strip_number, fontsize=20)
         plt.legend(loc='best')
         plt.grid(True)
@@ -377,7 +377,7 @@ class Calib_channel:
             plt.figure(figsize=(10,6))
             plt.errorbar(self.channel, self.energy, yerr=self.error, fmt='.', label='data')
             plt.ylabel('Energy [keV]')
-            plt.xlabel('Channel [keV]')
+            plt.xlabel('Channel [arb. un.]')
             plt.title('Plot of energy vs. channel number strip %s' % strip_number)
             plt.grid(True)
 
