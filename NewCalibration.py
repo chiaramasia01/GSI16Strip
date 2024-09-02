@@ -61,9 +61,9 @@ class Calib_position:
         plt.ylabel('Channel [arb.un.]', fontsize=15)
         plt.ylim(3000,4000)
         plt.title("Histogram of Energy vs Uncalib Position strip %s" % strip_number, fontsize=20)
-        plt.text(0.75, 0.24, 'plutonium-239', transform=ax.transAxes, fontsize=15)
-        plt.text(0.74, 0.51, 'americium-241', transform=ax.transAxes, fontsize=15)
-        plt.text(0.8, 0.82, 'curium-244', transform=ax.transAxes, fontsize=15)
+        plt.text(0.75, 0.24, 'plutonium-239', transform=ax.transAxes, fontsize=15) #NOTE: metti la stringa come variabile
+        plt.text(0.74, 0.51, 'americium-241', transform=ax.transAxes, fontsize=15) #NOTE: metti la stringa come variabile
+        plt.text(0.8, 0.82, 'curium-244', transform=ax.transAxes, fontsize=15) #NOTE: metti la stringa come variabile
 
 
     def plot_data(self, strip_number, count_threshold, plot=False):  # change from false to true to display the plot
@@ -216,9 +216,9 @@ class Calib_position:
         plt.ylabel('Channel [arb.un.]', fontsize=15)
         plt.ylim(5000,6000)
         plt.title("Histogram of Energy vs Calib Position strip %s" % strip_number, fontsize=20)
-        plt.text(0.75, 0.2, 'plutonium-239', transform=ax.transAxes, fontsize=15)
-        plt.text(0.74, 0.51, 'americium-241', transform=ax.transAxes, fontsize=15)
-        plt.text(0.8, 0.82, 'curium-244', transform=ax.transAxes, fontsize=15)
+        plt.text(0.75, 0.2, 'plutonium-239', transform=ax.transAxes, fontsize=15) #NOTE: metti la stringa come variabile
+        plt.text(0.74, 0.51, 'americium-241', transform=ax.transAxes, fontsize=15) #NOTE: metti la stringa come variabile
+        plt.text(0.8, 0.82, 'curium-244', transform=ax.transAxes, fontsize=15) #NOTE: metti la stringa come variabile
 
 
     def save_hist_data(self, output_filename, strip_number):
