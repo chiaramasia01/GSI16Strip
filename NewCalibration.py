@@ -278,10 +278,10 @@ class Calib_energy:
         plt.figure(figsize=(10,8))
 
         plt.bar(self.energy, self.content, width=10)
-        plt.xlabel("Channel", fontsize=15)
-        plt.ylabel("Content", fontsize=15)
+        plt.xlabel("Channel [arb.un.]", fontsize=15)
+        plt.ylabel("Counts", fontsize=15)
         plt.title("Histogram of position corrected energy strip %s" % strip_number, fontsize=20)
-        plt.xlim(5000, 6000)
+        plt.xlim(5000, 5800)
         plt.grid(True)
 
 
@@ -314,12 +314,12 @@ class Calib_energy:
         xx = np.linspace(min(self.energy), max(self.energy), 5000)
         plt.plot(xx, self.fit_model(xx, *self.popt), "r-", label='fit')
 
-        plt.xlabel("Strip position [mm]", fontsize=15)
-        plt.ylabel("Channel [arb.un.]", fontsize=15)
+        plt.ylabel("Counts", fontsize=15)
+        plt.xlabel("Channel [arb.un.]", fontsize=15)
         plt.title("Plot of position corrected energy strip %s" % strip_number, fontsize=20)
         plt.legend(loc='best')
         plt.grid(True)
-        plt.xlim(5000,6000)
+        plt.xlim(5000,5800)
 
         self.fit_results()
 
@@ -383,11 +383,13 @@ class Calib_channel:
         "This function plots an errorbar of channel-energy data"
         if plot==True:
             plt.figure(figsize=(10,6))
-            plt.errorbar(self.channel, self.energy, yerr=self.error, fmt='.', label='data')
-            plt.ylabel('Energy [keV]')
-            plt.xlabel('Channel [arb. un.]')
-            plt.title('Plot of energy vs. channel number strip %s' % strip_number)
+            plt.errorbar(self.channel, self.energy, yerr=self.error, fmt='o', label='data')
+            plt.ylabel('Energy [keV]', fontsize=15)
+            plt.xlabel('Channel [arb. un.]', fontsize=15)
+            plt.title('Plot of energy vs. channel number strip %s' % strip_number, fontsize=20)
             plt.grid(True)
+            plt.xlim(5100, 5700)
+            plt.ylim(5000,6000)
 
 
     def fit_line(self, strip_number, plot=True):
