@@ -95,6 +95,11 @@ TGo4EventProcessor(cname)
   if (fCal) fCal->PrintParameter(0,0);
   else cout << "**** ERRR - CalibPar doesn't exist - program will crash.\n";
   
+
+//======================== Creating text file for data acquisition =================
+
+// NOTE: remember to change name everytime
+
   ///Open file to write to 
   outfile.open("20240808_test001_0001_uncal.txt", ios::out);
   
@@ -734,8 +739,14 @@ for(int i =0;i<4;i++){
 
  //   cout<<"pOutEvent->fTimeTrig " <<pOutEvent->fTimeTrig << endl;
     pOutEvent->fev_num=fInput->event_number;
+
+
+//================== Write text file with data ======================
+
     outfile  <<  pOutEvent->fev_num << " " <<pOutEvent->fTimeStrip << " " << pOutEvent->fIDX <<" "<< pOutEvent->fIDY << " " << pOutEvent->fE_kev <<" " <<  pOutEvent->fB_pulse << endl;
     cout<< "Event Number " <<  pOutEvent->fev_num <<" Time " <<pOutEvent->fTimeStrip << " IDY " << pOutEvent->fIDY << " IDX " << pOutEvent->fIDX << " Energy " << pOutEvent->fE_kev << " Macro "<< pOutEvent->fB_pulse <<endl;
+
+
    // pOutEvent->fTrig = fInput->Trig;
     //pOutEvent->fmultihit=fInput->Multihit;
 
