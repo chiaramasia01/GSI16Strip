@@ -8,7 +8,12 @@ How to perform a new calibration
 - Once the first file is changed go to GO4 and extract data from the energy 1d histogram of each strip as ASCII file. Use this to perform the last step of calibration
 - This step produces a Calib_Energy.dat file to be exchanged with the blank in Strip16CalibParameter.cxx
 
+How to calculate the cross section
+- Extract data using the Strip16AnalProc.cxx which produces a text file. Change the name of the outfile everytime otherwise it gets overwritten.
+- Everything else should be handled by cross_section.ipynb .
+
 Files cointained in the repository:
 
 - NewCalibration.py: class file that contains the functions to perform the calibration
 - main_calibration.ipynb: main file. Also shows the result of calibration for all strips.
+- cross_section.ipynb: jupyter notebook for calculating fusion cross sections
